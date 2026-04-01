@@ -3,21 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Agência Elite Digital | O Ápice do Marketing e da Tecnologia</title>
+    <title>Agência Elite Digital | Inteligência e Performance</title>
     <style>
-        /* Variáveis de Cores: Luxo e Profundidade */
+        /* Variáveis de Cores - O mais alto nível de luxo digital */
         :root {
-            /* Black Absoluto */
             --bg-absolute-black: #000000;
-            --bg-glass: rgba(10, 10, 10, 0.7);
-            --border-glass: rgba(255, 255, 255, 0.08);
-
-            /* Dourado Complexo (Simula metal real) */
+            --bg-section-alt: #050505;
             --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #AA771C 75%, #FBF5B7 100%);
-            
-            /* Prata Tech (Complexo com luster) */
-            --silver-gradient: linear-gradient(135deg, #757F9A 0%, #D7DDE8 35%, #949EBC 50%, #D7DDE8 75%, #aebdd1 100%);
-            
+            --silver-gradient: linear-gradient(135deg, #757F9A 0%, #D7DDE8 40%, #949EBC 60%, #D7DDE8 100%);
+            --glass-bg: rgba(20, 20, 20, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.05);
             --text-main: #FFFFFF;
             --text-muted: #888888;
         }
@@ -26,8 +21,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent; /* Remove o highlight azul padrão do iOS */
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -35,418 +30,484 @@
             color: var(--text-main);
             overflow-x: hidden;
             scroll-behavior: smooth;
-            /* Garante que o fundo preto seja uniforme, mesmo em rolagem no iOS */
-            overscroll-behavior: none;
         }
 
-        /* Ilha Dinâmica (Notch) Refinada */
+        /* --- ILHA DINÂMICA (NOTCH) --- */
         .island-container {
             position: fixed;
-            top: 20px; /* Alinhado para o notch do iPhone */
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 1000;
+            z-index: 9999;
         }
 
         .dynamic-island {
-            background-color: #000000;
+            background-color: #000;
             border-radius: 40px;
             width: 160px;
             height: 38px;
-            overflow: hidden;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 0 1.5px rgba(255, 255, 255, 0.08);
-            /* Animação elástica Apple: cubic-bezier(0.2, 0.8, 0.2, 1.2) */
-            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2);
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
             position: relative;
         }
 
         .dynamic-island.expanded {
-            width: 330px;
-            height: 240px;
-            border-radius: 35px;
+            width: 320px;
+            height: 250px;
+            border-radius: 30px;
             padding: 20px;
-            display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
         }
 
-        /* Estado Retraído */
         .island-notif {
             display: flex;
-            align-items: center;
-            justify-content: space-around;
+            justify-content: space-between;
             width: 100%;
-            padding: 0 15px;
-            opacity: 1;
+            padding: 0 20px;
             transition: opacity 0.3s;
         }
 
-        .island-notif-text {
+        .island-notif span {
+            font-size: 0.75rem;
             color: #aaa;
-            font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
-        .dynamic-island.expanded .island-notif {
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
-        }
-
-        /* Conteúdo Expandido */
-        .island-content {
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.9);
-            transition: all 0.4s ease 0.1s;
-            width: 100%;
-        }
-
-        .dynamic-island.expanded .island-content {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1);
-        }
-
-        .island-content h4 {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 20px;
-        }
+        .dynamic-island.expanded .island-notif { opacity: 0; position: absolute; }
 
         .island-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease 0.1s;
+            width: 100%;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            width: 100%;
+            margin-top: 10px;
+        }
+
+        .dynamic-island.expanded .island-menu {
+            opacity: 1; visibility: visible; transform: translateY(0);
         }
 
         .island-menu a {
-            text-decoration: none;
             color: var(--text-main);
-            font-size: 1.3rem;
-            font-weight: 700;
-            background: var(--silver-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: transform 0.2s;
-        }
-        
-        /* Feedback Tátil Visual no iOS (Efeito elástico ao tocar) */
-        .island-menu a:active {
-            transform: scale(0.97);
-        }
-
-        .island-menu a:hover {
-            opacity: 0.8;
-        }
-
-        .island-menu a span {
-            -webkit-text-fill-color: initial;
-            color: #555;
+            text-decoration: none;
             font-size: 1.1rem;
+            font-weight: 600;
+            padding: 10px;
+            border-bottom: 1px solid var(--glass-border);
+            text-align: left;
         }
+        .island-menu a:last-child { border: none; color: #BF953F; }
 
-        /* Seções Generais */
+        /* --- SEÇÕES GERAIS --- */
         section {
+            padding: 100px 20px;
             min-height: 100vh;
-            padding: 120px 20px 50px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
+            position: relative;
         }
 
-        /* Hero Section - Vendedora */
-        .hero {
-            background: radial-gradient(circle at center, rgba(15, 15, 15, 1) 0%, rgba(0, 0, 0, 1) 100%);
-        }
-
-        .hero h1 {
-            font-size: clamp(3rem, 10vw, 7rem);
-            font-weight: 900;
-            letter-spacing: -3px;
-            line-height: 1.0;
-            background: linear-gradient(180deg, #FFFFFF, #aaaaaa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-        }
-
-        .hero h1 span.gold {
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: clamp(1.1rem, 3.5vw, 1.6rem);
-            color: var(--text-muted);
-            max-width: 800px;
-            margin-bottom: 50px;
-            font-weight: 400;
-            letter-spacing: -0.3px;
-        }
-
-        /* Botão Vendedor ( फीडबैक visual tátil ) */
-        .btn-elite {
-            display: inline-block;
-            background: var(--gold-gradient);
-            color: #000;
-            text-decoration: none;
-            padding: 20px 50px;
-            font-size: 1.2rem;
-            font-weight: 800;
-            border-radius: 60px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1.2);
-            box-shadow: 0 15px 30px rgba(191, 149, 63, 0.3);
-        }
-
-        .btn-elite:active {
-            transform: scale(0.95);
-            box-shadow: 0 5px 15px rgba(191, 149, 63, 0.5);
-        }
-
-        /* Nova Seção: Inteligência e ROI (Interativa) */
-        .intelligence-section {
-            background-color: #030303;
-        }
-
-        .intelligence-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
-            max-width: 1100px;
+        .container {
+            max-width: 1200px;
             width: 100%;
-            margin-top: 60px;
+            margin: 0 auto;
         }
 
-        @media (min-width: 768px) {
-            .intelligence-grid {
-                grid-template-columns: 1fr 1fr;
-                align-items: center;
-            }
-        }
-
-        .int-text {
-            text-align: left;
-        }
-
-        .int-text h2 {
-            font-size: 2.8rem;
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
             background: var(--silver-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 20px;
-            letter-spacing: -1.5px;
-        }
-
-        .int-text p {
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            line-height: 1.7;
-        }
-
-        /* Calculadora de ROI */
-        .roi-calculator {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-glass);
-            padding: 40px;
-            border-radius: 25px;
-            text-align: left;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-        }
-
-        .roi-calculator label {
-            display: block;
-            color: #eee;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .roi-calculator input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-main);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            font-size: 1.1rem;
-            transition: border-color 0.3s;
-        }
-        
-        .roi-calculator input:focus {
-            outline: none;
-            border-color: #BF953F;
-        }
-
-        .roi-result {
-            margin-top: 10px;
-            border-top: 1px solid var(--border-glass);
-            padding-top: 25px;
             text-align: center;
+            letter-spacing: -1px;
         }
 
-        .roi-result h3 {
+        .section-subtitle {
+            text-align: center;
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 1.2rem;
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- 1. HERO SECTION --- */
+        .hero { background: radial-gradient(circle at top, #111 0%, #000 70%); text-align: center; }
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+        .hero h1 .gold { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .btn-master {
+            background: var(--gold-gradient);
+            color: #000;
+            padding: 18px 45px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 50px;
+            text-decoration: none;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 30px rgba(191, 149, 63, 0.2);
         }
+        .btn-master:active { transform: scale(0.95); }
 
-        .roi-value {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
+        /* --- 2. MÉTRICAS EM TEMPO REAL --- */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
         }
+        .metric-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--gold-gradient);
+        }
+        .metric-value {
+            font-size: 3rem; font-weight: 900; color: #fff; margin: 10px 0;
+            font-variant-numeric: tabular-nums; /* Mantém os números fixos ao piscar */
+        }
+        .live-dot {
+            display: inline-block; width: 10px; height: 10px; background: #0f0; border-radius: 50%;
+            animation: pulse 1.5s infinite; margin-right: 8px;
+        }
+        @keyframes pulse { 0% { opacity: 1; box-shadow: 0 0 10px #0f0; } 50% { opacity: 0.3; } 100% { opacity: 1; box-shadow: 0 0 10px #0f0; } }
 
+        /* --- 3. SOBRE NÓS (A EMPRESA) --- */
+        .about-section { background-color: var(--bg-section-alt); }
+        .about-text { font-size: 1.2rem; color: #aaa; line-height: 1.8; text-align: justify; }
+
+        /* --- 4. ABAS PROFISSIONAIS (SERVIÇOS) --- */
+        .tabs-container { width: 100%; }
+        .tabs-header {
+            display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: rgba(255,255,255,0.05); color: #888; border: 1px solid var(--glass-border);
+            padding: 12px 30px; border-radius: 30px; font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .tab-btn.active { background: #fff; color: #000; }
+        .tab-content { display: none; background: var(--glass-bg); padding: 40px; border-radius: 20px; border: 1px solid var(--glass-border); }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 5. ENGENHARIA AUDIOVISUAL --- */
+        .av-grid {
+            display: grid; grid-template-columns: 1fr; gap: 30px; align-items: center;
+        }
+        @media(min-width: 768px){ .av-grid { grid-template-columns: 1fr 1fr; } }
+        .av-text h3 { font-size: 2rem; margin-bottom: 20px; background: var(--silver-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+        .av-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .av-tag { background: rgba(191, 149, 63, 0.1); border: 1px solid rgba(191, 149, 63, 0.3); color: #BF953F; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; }
+
+        /* --- 6. CALCULADORA DE ROI AVANÇADA COM GRÁFICO --- */
+        .roi-wrapper {
+            display: grid; grid-template-columns: 1fr; gap: 40px; background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 40px; border-radius: 30px;
+        }
+        @media(min-width: 900px){ .roi-wrapper { grid-template-columns: 1fr 1fr; } }
+        .calc-inputs label { display: block; margin-top: 15px; color: #aaa; font-size: 0.9rem; margin-bottom: 5px; }
+        .calc-inputs input {
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 15px; border-radius: 10px; font-size: 1.1rem; outline: none;
+        }
+        .calc-inputs input:focus { border-color: #BF953F; }
+        
+        /* Gráfico em CSS */
+        .chart-container { display: flex; align-items: flex-end; justify-content: space-around; height: 250px; background: #000; padding: 20px; border-radius: 15px; border: 1px solid #222; position: relative; }
+        .bar-group { display: flex; flex-direction: column; align-items: center; width: 40%; }
+        .bar { width: 100%; border-radius: 5px 5px 0 0; transition: height 0.5s ease-out; position: relative; }
+        .bar-invest { background: var(--silver-gradient); height: 20%; }
+        .bar-return { background: var(--gold-gradient); height: 50%; box-shadow: 0 -5px 20px rgba(191, 149, 63, 0.4); }
+        .bar-label { margin-top: 10px; color: #888; font-size: 0.8rem; font-weight: bold; }
+        .chart-value { position: absolute; top: -30px; font-weight: bold; font-size: 1rem; color: #fff; width: 100%; text-align: center; }
+
+        .roi-final-text { text-align: center; margin-top: 30px; font-size: 2rem; font-weight: 900; }
+        .roi-final-text span { color: #0f0; }
+
+        /* --- 7. FOOTER/CONTATO --- */
+        footer { padding: 80px 20px; text-align: center; border-top: 1px solid #111; }
     </style>
 </head>
 <body>
 
     <div class="island-container">
-        <div class="dynamic-island" id="dynamicIsland" onclick="toggleIsland(event)">
-            <div class="island-notif" id="islandNotif">
-                <span class="island-notif-text">AGÊNCIA ELITE</span>
-                <span style="color:var(--gold); font-weight:900;">•</span>
-                <span class="island-notif-text">ONLINE</span>
+        <div class="dynamic-island" id="dynamicIsland" onclick="toggleIsland()">
+            <div class="island-notif">
+                <span>AGÊNCIA ELITE</span>
+                <span style="color:var(--gold-gradient);">STATUS: ATIVO</span>
             </div>
-            
-            <div class="island-content">
-                <h4>Navegação de Elite</h4>
-                <div class="island-menu">
-                    <a href="#inicio" onclick="closeIsland()">INÍCIO <span>→</span></a>
-                    <a href="#inteligencia" onclick="closeIsland()">ROI E DADOS <span>→</span></a>
-                    <a href="https://wa.me/SEUNUMERO" onclick="closeIsland()" style="background:var(--gold-gradient); -webkit-background-clip: text;">FALAR COM CONSULTOR <span>→</span></a>
-                </div>
+            <div class="island-menu">
+                <a href="#empresa">A Empresa</a>
+                <a href="#servicos">Metodologia</a>
+                <a href="#roi">Simular ROI</a>
+                <a href="https://wa.me/SEUNUMERO">Consultoria VIP</a>
             </div>
         </div>
     </div>
 
-    <section id="inicio" class="hero">
-        <h1>DOMINE SEU <br>MERCADO COM <br><span class="gold">TECNOLOGIA</span></h1>
-        <p>Não somos apenas uma agência. Somos sua estrutura de engenharia digital avançada. Escalamos faturamentos usando IA, dados precisos e a estética impecável que sua marca merece.</p>
-        <a href="https://wa.me/SEUNUMERO" class="btn-elite" id="heroCta">Escalar meu Negócio</a>
+    <section class="hero">
+        <div class="container">
+            <h1>A ENGENHARIA <br>DO <span class="gold">LUCRO DIGITAL</span></h1>
+            <p class="section-subtitle" style="font-size: 1.4rem;">Mais que uma agência. Somos o braço tecnológico que transforma o seu negócio em uma máquina previsível de vendas utilizando dados, inteligência e estética de luxo.</p>
+            <a href="#roi" class="btn-master">Inicie a Transformação</a>
+        </div>
     </section>
 
-    <section id="inteligencia" class="intelligence-section">
-        <div class="intelligence-grid">
-            <div class="int-text">
-                <h2>Cultura de Dados <br>Não é Opção</h2>
-                <p>O mercado não perdoa amadores. Na Agência Elite, cada centavo do seu investimento é rastreado por algoritmos próprios. Não vendemos curtidas, vendemos Lucro e Retorno Sobre o Investimento.</p>
-                <p>Ao lado, você pode simular como nossa estrutura audiovisual de ponta e tráfego avançado transformam seu orçamento em faturamento.</p>
-            </div>
-            
-            <div class="roi-calculator">
-                <label>Investimento Mensal (R$)</label>
-                <input type="number" id="roiBudget" value="5000" oninput="calculateROI()">
-                
-                <label>Custo por Lead (R$)</label>
-                <input type="number" id="roiCPL" value="10" oninput="calculateROI()">
-                
-                <label>Taxa de Conversão do Comercial (%)</label>
-                <input type="number" id="roiConv" value="15" oninput="calculateROI()">
-                
-                <label>Ticket Médio da Venda (R$)</label>
-                <input type="number" id="roiTicket" value="2000" oninput="calculateROI()">
-                
-                <div class="roi-result">
-                    <h3>Potencial Faturamento</h3>
-                    <p class="roi-value" id="roiResult">R$ 150.000</p>
-                    <p style="color:#aaa; font-size:0.9rem;">ROI Estimado: <strong style="color:#5f5;" id="roiPercentage">30x</strong></p>
+    <section id="metricas">
+        <div class="container">
+            <h2 class="section-title">Nossa Operação em <span style="background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Tempo Real</span></h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <p><span class="live-dot"></span>Leads Gerenciados (Hoje)</p>
+                    <div class="metric-value" id="leads-counter">1,240</div>
+                </div>
+                <div class="metric-card">
+                    <p><span class="live-dot"></span>Anúncios Otimizados</p>
+                    <div class="metric-value" id="ads-counter">8,432</div>
+                </div>
+                <div class="metric-card">
+                    <p><span class="live-dot"></span>Crescimento de ROI Médio</p>
+                    <div class="metric-value">314%</div>
                 </div>
             </div>
         </div>
     </section>
 
+    <section id="empresa" class="about-section">
+        <div class="container">
+            <h2 class="section-title">O Padrão Elite</h2>
+            <p class="section-subtitle">O mercado não perdoa amadorismo. Nós construímos autoridades.</p>
+            <p class="about-text">
+                Nascemos com um propósito claro: eliminar o "achismo" do marketing digital. Combinamos análise profunda de dados com um refinamento estético sem precedentes. Entendemos que a primeira impressão de uma marca define o seu valor de mercado. Por isso, nossa equipe opera com processos rigorosos, entregando campanhas que não apenas chamam atenção, mas convertem curiosos em compradores leais.
+            </p>
+        </div>
+    </section>
+
+    <section id="servicos">
+        <div class="container">
+            <h2 class="section-title">Nosso Ecossistema</h2>
+            
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="openTab('tab-trafego')">Tráfego & Dados</button>
+                    <button class="tab-btn" onclick="openTab('tab-design')">Design Imersivo</button>
+                    <button class="tab-btn" onclick="openTab('tab-estrategia')">Consultoria</button>
+                </div>
+
+                <div id="tab-trafego" class="tab-content active">
+                    <h3 style="color:#BF953F; margin-bottom:15px; font-size:1.8rem;">Tráfego Avançado e IA</h3>
+                    <p style="color:#aaa; line-height:1.6;">Gestão de mídia paga em alta performance (Meta Ads, Google Ads, TikTok). Utilizamos inteligência artificial para mapear o comportamento de compra do seu cliente ideal, reduzindo o Custo de Aquisição (CAC) e escalando seu orçamento com segurança matemática.</p>
+                </div>
+                <div id="tab-design" class="tab-content">
+                    <h3 style="color:#BF953F; margin-bottom:15px; font-size:1.8rem;">UX/UI & Identidade Visual</h3>
+                    <p style="color:#aaa; line-height:1.6;">Construímos Landing Pages (como esta) e e-commerces pautados na psicologia das cores e arquitetura de luxo. A percepção de valor do seu produto aumenta imediatamente quando embalado pela nossa engenharia de design.</p>
+                </div>
+                <div id="tab-estrategia" class="tab-content">
+                    <h3 style="color:#BF953F; margin-bottom:15px; font-size:1.8rem;">Growth Hacking</h3>
+                    <p style="color:#aaa; line-height:1.6;">Analisamos todo o seu funil de vendas, do clique no anúncio até o fechamento no WhatsApp ou Checkout. Identificamos gargalos e implementamos melhorias rápidas para destrancar faturamentos paralisados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="audiovisual" style="background:#030303;">
+        <div class="container av-grid">
+            <div class="av-text">
+                <h3>Captação Cinematográfica de Alta Conversão</h3>
+                <p style="color:#aaa; line-height:1.7; margin-bottom:20px;">
+                    No marketing atual, o criativo (vídeo) é responsável por 80% do resultado do anúncio. Nossa agência conta com uma produtora própria para garantir qualidade de televisão nos seus anúncios de internet.
+                </p>
+                <p style="color:#aaa; line-height:1.7;">
+                    Nossa captação utiliza o que há de mais avançado: da agilidade mobile hiper-focada à precisão cinematográfica das lentes mirrorless, complementada por áudio cristalino e iluminação profissional de estúdio. Cada frame é matematicamente pensado para prender a atenção e vender.
+                </p>
+                <div class="av-tags">
+                    <span class="av-tag">4K Resolution</span>
+                    <span class="av-tag">Color Grading</span>
+                    <span class="av-tag">Sound Design</span>
+                    <span class="av-tag">Directing</span>
+                </div>
+            </div>
+            <div>
+                <div style="width:100%; height:300px; background:radial-gradient(circle, #222, #000); border-radius:20px; border:1px solid #333; display:flex; align-items:center; justify-content:center; flex-direction:column; box-shadow: inset 0 0 50px #000;">
+                    <div style="width:80px; height:80px; border:3px solid #BF953F; border-radius:50%; display:flex; align-items:center; justify-content:center; animation:pulse 2s infinite;">
+                        <div style="width:30px; height:30px; background:#BF953F; border-radius:50%;"></div>
+                    </div>
+                    <p style="margin-top:20px; color:#555; letter-spacing:2px; font-size:0.9rem;">REC &bull; STUDIO ELITE</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roi">
+        <div class="container">
+            <h2 class="section-title">Simulador de Escalabilidade</h2>
+            <p class="section-subtitle">Descubra o potencial do seu negócio quando operado por profissionais.</p>
+            
+            <div class="roi-wrapper">
+                <div class="calc-inputs">
+                    <label>Orçamento de Tráfego (R$)</label>
+                    <input type="number" id="inp-orcamento" value="3000" oninput="updateChart()">
+                    
+                    <label>Custo por Lead/Contato (R$)</label>
+                    <input type="number" id="inp-cpl" value="15" oninput="updateChart()">
+                    
+                    <label>Taxa de Fechamento (%)</label>
+                    <input type="number" id="inp-taxa" value="10" oninput="updateChart()">
+                    
+                    <label>Ticket Médio (Preço do Produto) (R$)</label>
+                    <input type="number" id="inp-ticket" value="1500" oninput="updateChart()">
+                </div>
+
+                <div style="display:flex; flex-direction:column; justify-content:center;">
+                    <div class="chart-container">
+                        <div class="bar-group">
+                            <div class="bar bar-invest" id="bar-invest">
+                                <div class="chart-value" id="val-invest">R$ 3k</div>
+                            </div>
+                            <div class="bar-label">INVESTIMENTO</div>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar bar-return" id="bar-return">
+                                <div class="chart-value" id="val-return">R$ 30k</div>
+                            </div>
+                            <div class="bar-label" style="color:#BF953F;">RETORNO</div>
+                        </div>
+                    </div>
+                    <div class="roi-final-text">
+                        Lucro Projetado:<br>
+                        <span id="txt-lucro">R$ 27.000,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Pronto para o <span class="gold" style="background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Próximo Nível?</span></h2>
+        <a href="https://wa.me/SEUNUMERO" class="btn-master" style="margin-bottom:40px;">Falar com um Diretor</a>
+        <p style="color:#555; font-size:0.9rem;">&copy; 2026 Agência Elite Digital. Todos os direitos reservados.</p>
+    </footer>
+
     <script>
+        // --- ILHA DINÂMICA ---
         const island = document.getElementById('dynamicIsland');
-        let isExpanded = false;
-
-        // Lógica da Ilha Dinâmica com feedback visual tátil
-        function toggleIsland(event) {
-            event.stopPropagation(); // Previne fechar no clique de body
-            if (!isExpanded) {
+        let islandOpen = false;
+        function toggleIsland() {
+            if(!islandOpen) {
                 island.classList.add('expanded');
-                isExpanded = true;
-                // Feedback visual de clique rápido ao toque
-                island.style.transform = "translateX(-50%) scale(0.97)";
-                setTimeout(() => island.style.transform = "translateX(-50%) scale(1)", 100);
-            }
-        }
-
-        function closeIsland() {
-            if (isExpanded) {
-                island.classList.remove('expanded');
-                isExpanded = false;
-            }
-        }
-
-        // Fecha a ilha se clicar fora dela
-        document.body.addEventListener('click', () => closeIsland());
-
-        // Lógica da Calculadora de ROI (Lógica Vendedora)
-        function calculateROI() {
-            const budget = parseFloat(document.getElementById('roiBudget').value);
-            const cpl = parseFloat(document.getElementById('roiCPL').value);
-            const conv = parseFloat(document.getElementById('roiConv').value) / 100;
-            const ticket = parseFloat(document.getElementById('roiTicket').value);
-
-            if (budget > 0 && cpl > 0 && conv > 0 && ticket > 0) {
-                // Cálculo: Investimento / CPL = Leads. Leads * Conversão = Vendas. Vendas * Ticket = Faturamento.
-                const leads = budget / cpl;
-                const sales = leads * conv;
-                const grossRevenue = sales * ticket;
-                const profit = grossRevenue - budget;
-                const roiPercentage = profit / budget;
-
-                // Formata os números
-                const faturamentoFormatado = grossRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                const roiFormatado = (roiPercentage + 1).toFixed(1) + 'x';
-
-                // Atualiza na tela
-                document.getElementById('roiResult').textContent = faturamentoFormatado;
-                document.getElementById('roiPercentage').textContent = roiFormatado;
+                islandOpen = true;
             } else {
-                document.getElementById('roiResult').textContent = "R$ 0";
-                document.getElementById('roiPercentage').textContent = "0x";
+                island.classList.remove('expanded');
+                islandOpen = false;
+            }
+        }
+        
+        // --- MÉTRICAS VIVAS (Simulador de tempo real) ---
+        let leads = 1240;
+        let ads = 8432;
+        setInterval(() => {
+            // Aumenta os leads aleatoriamente a cada 3-6 segundos
+            if(Math.random() > 0.5) {
+                leads += Math.floor(Math.random() * 3);
+                document.getElementById('leads-counter').innerText = leads.toLocaleString();
+            }
+            // Aumenta edições de anúncios rapidamente
+            ads += Math.floor(Math.random() * 5);
+            document.getElementById('ads-counter').innerText = ads.toLocaleString();
+        }, 3000);
+
+        // --- SISTEMA DE ABAS ---
+        function openTab(tabId) {
+            // Remove active de todos os botoes e conteudos
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Adiciona no clicado
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // --- CALCULADORA DE ROI E GRÁFICO DINÂMICO ---
+        function formatMoney(value) {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+        function formatCompact(value) {
+            if(value >= 1000000) return 'R$ ' + (value/1000000).toFixed(1) + 'M';
+            if(value >= 1000) return 'R$ ' + (value/1000).toFixed(1) + 'k';
+            return 'R$ ' + value.toFixed(0);
+        }
+
+        function updateChart() {
+            const orcamento = parseFloat(document.getElementById('inp-orcamento').value) || 0;
+            const cpl = parseFloat(document.getElementById('inp-cpl').value) || 1;
+            const taxa = (parseFloat(document.getElementById('inp-taxa').value) || 0) / 100;
+            const ticket = parseFloat(document.getElementById('inp-ticket').value) || 0;
+
+            const leads = orcamento / cpl;
+            const vendas = leads * taxa;
+            const faturamento = vendas * ticket;
+            const lucro = faturamento - orcamento;
+
+            // Atualiza os Textos
+            document.getElementById('val-invest').innerText = formatCompact(orcamento);
+            document.getElementById('val-return').innerText = formatCompact(faturamento);
+            document.getElementById('txt-lucro').innerText = formatMoney(lucro);
+
+            // Animação das Barras do Gráfico (Máximo 100% da altura do container)
+            const barInvest = document.getElementById('bar-invest');
+            const barReturn = document.getElementById('bar-return');
+
+            if (faturamento > orcamento && orcamento > 0) {
+                // Se deu lucro, a barra de retorno fica alta (ex: 80%) e a de investimento fica proporcional
+                let razao = orcamento / faturamento;
+                barReturn.style.height = '85%';
+                let investHeight = Math.max(10, 85 * razao); // min 10% para não sumir
+                barInvest.style.height = investHeight + '%';
+                document.getElementById('txt-lucro').style.color = '#0f0'; // Verde
+            } else if (orcamento >= faturamento && orcamento > 0) {
+                // Prejuízo ou empate
+                let razao = faturamento / orcamento;
+                barInvest.style.height = '85%';
+                let returnHeight = Math.max(5, 85 * razao);
+                barReturn.style.height = returnHeight + '%';
+                document.getElementById('txt-lucro').style.color = '#f00'; // Vermelho
+            } else {
+                // Zerado
+                barInvest.style.height = '10%';
+                barReturn.style.height = '10%';
             }
         }
 
-        // Executa o cálculo inicial ao carregar a página
-        window.onload = () => {
-            calculateROI();
-        };
-
-        // Feedback visual tátil nos CTAs principais
-        const heroCta = document.getElementById('heroCta');
-        heroCta.addEventListener('click', () => {
-             // Simulação rápida de "peso" do clique visual para iOS
-             heroCta.style.transform = "scale(0.93)";
-             setTimeout(() => heroCta.style.transform = "scale(1)", 100);
-        });
-
+        // Chama na inicialização
+        window.onload = updateChart;
     </script>
 </body>
 </html>
