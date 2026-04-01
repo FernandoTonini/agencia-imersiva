@@ -3,23 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Agência Elite Digital | Inteligência e Performance</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <title>Agência Elite Digital | Inteligência, Dados e Audiovisual</title>
+    
+    <style>
+        /* --- VARIÁVEIS DE LUXO --- */
+        :root {
+            --bg-absolute-black: #000000;
+            --bg-section-alt: #050505;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #AA771C 75%, #FBF5B7 100%);
+            --silver-gradient: linear-gradient(135deg, #757F9A 0%, #D7DDE8 40%, #949EBC 60%, #D7DDE8 100%);
+            --glass-bg: rgba(20, 20, 20, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-absolute-black); color: var(--text-main); overflow-x: hidden; scroll-behavior: smooth; }
+        
+        .container { max-width: 1200px; width: 100%; margin: 0 auto; padding: 0 20px; }
+        .gold-text { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- ILHA DINÂMICA COM LOGO --- */
+        .island-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; }
+        .dynamic-island {
+            background-color: #000; border-radius: 40px; width: 170px; height: 42px; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+            display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
+        }
+        .dynamic-island.expanded { width: 320px; height: 300px; border-radius: 30px; padding: 20px; flex-direction: column; justify-content: flex-start; }
+        
+        .island-notif { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 15px; transition: opacity 0.3s; }
+        .island-logo { font-size: 1.2rem; color: #BF953F; display: flex; align-items: center; gap: 8px; font-weight: 900; letter-spacing: 1px;}
+        .island-logo img { width: 20px; height: 20px; border-radius: 50%; } /* Para caso você coloque imagem depois */
+        .status-pulse { width: 8px; height: 8px; background: #BF953F; border-radius: 50%; box-shadow: 0 0 8px #BF953F; animation: pulse 2s infinite; }
+        
+        .dynamic-island.expanded .island-notif { opacity: 0; position: absolute; pointer-events: none; }
+        .island-menu { opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease 0.1s; width: 100%; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+        .dynamic-island.expanded .island-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .menu-link { color: var(--text-main); text-decoration: none; font-size: 1.1rem; font-weight: 600; padding: 10px; border-bottom: 1px solid var(--glass-border); transition: 0.2s; }
+        .menu-link:active { transform: scale(0.95); }
+        .menu-link.highlight { border: none; color: #BF953F; text-align: center; margin-top: 5px; }
+
+        /* --- BOTÕES E TÍTULOS --- */
+        section { padding: 120px 0; min-height: 100vh; display: flex; align-items: center; }
+        .section-title { font-size: clamp(2rem, 5vw, 3.5rem); background: var(--silver-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; text-align: center; letter-spacing: -1px; }
+        .section-subtitle { text-align: center; color: var(--text-muted); font-size: 1.2rem; margin: 0 auto 60px; max-width: 700px; line-height: 1.6; }
+        
+        .btn-master {
+            background: var(--gold-gradient); color: #000; padding: 18px 45px; font-size: 1.1rem; font-weight: 800;
+            border-radius: 50px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 10px 30px rgba(191, 149, 63, 0.2); border: none; cursor: pointer;
+        }
+        .btn-master:active { transform: scale(0.95); }
+
+        /* --- HERO --- */
+        .hero { background: radial-gradient(circle at top, #111 0%, #000 70%); text-align: center; padding-top: 160px; }
+        .hero h1 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px; letter-spacing: -2px; }
+
+        /* --- EMPRESA EXPANDIDA --- */
+        .about-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+        @media(min-width: 768px) { .about-grid { grid-template-columns: 1fr 1fr; align-items: center;} }
+        .about-text { font-size: 1.15rem; color: #aaa; line-height: 1.8; margin-bottom: 20px;}
+        .about-card { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 25px; border-radius: 15px; margin-bottom: 15px; border-left: 3px solid #BF953F; }
+        .about-card h4 { color: #fff; margin-bottom: 10px; font-size: 1.2rem; }
+        .about-card p { color: #888; font-size: 0.95rem; }
+
+        /* --- ESTEIRA INTELIGENTE (QUIZ FUNIL) --- */
+        .funnel-section { background-color: #030303; position: relative; }
+        .funnel-container { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 50px 30px; max-width: 800px; margin: 0 auto; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); min-height: 400px; display: flex; flex-direction: column; justify-content: center; }
+        
+        .funnel-progress { width: 100%; height: 4px; background: #222; border-radius: 4px; margin-bottom: 40px; overflow: hidden; }
+        .funnel-bar { width: 0%; height: 100%; background: var(--gold-gradient); transition: width 0.5s ease; }
+        
+        .funnel-step { display: none; animation: fadeInRight 0.5s ease forwards; }
+        .funnel-step.active { display: block; }
+        
+        .funnel-question { font-size: 1.8rem; font-weight: 700; margin-bottom: 30px; color: #fff; }
+        .funnel-options { display: grid; gap: 15px; }
+        
+        .funnel-btn {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #ccc; padding: 20px;
+            border-radius: 15px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; text-align: left;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .funnel-btn:hover { background: rgba(191, 149, 63, 0.1); border-color: #BF953F; color: #fff; transform: translateX(5px); }
+        .funnel-btn::after { content: '→'; opacity: 0; transition: 0.3s; color: #BF953F; }
+        .funnel-btn:hover::after { opacity: 1; }
+
+        .funnel-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; padding: 20px; border-radius: 15px; font-size: 1.2rem; margin-bottom: 20px; outline: none; }
+        .funnel-input:focus { border-color: #BF953F; }
+
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes pulse { 0% { opacity: 1; box-shadow: 0 0 10px #BF953F; } 50% { opacity: 0.3; } 100% { opacity: 1; box-shadow: 0 0 10px #BF953F; } }
+
+        /* --- FOOTER --- */
+        footer { padding: 80px 20px 40px; text-align: center; border-top: 1px solid #111; }
+    </style>
 </head>
 <body>
 
     <div class="island-container">
         <div class="dynamic-island" id="dynamicIsland">
             <div class="island-notif">
-                <span>AGÊNCIA ELITE</span>
-                <span class="status-dot"></span>
+                <span class="island-logo">✦ ELITE</span>
+                <span class="status-pulse"></span>
             </div>
             <div class="island-menu">
                 <a href="#empresa" class="menu-link">A Empresa</a>
-                <a href="#servicos" class="menu-link">Metodologia</a>
-                <a href="#roi" class="menu-link">Simular ROI</a>
-                <a href="https://wa.me/SEUNUMERO" class="menu-link highlight">Consultoria VIP</a>
+                <a href="#audiovisual" class="menu-link">Audiovisual</a>
+                <a href="#funil" class="menu-link">Diagnóstico de Escala</a>
+                <a href="#roi" class="menu-link highlight">Calculadora de ROI</a>
             </div>
         </div>
     </div>
@@ -27,141 +124,238 @@
     <section id="inicio" class="hero">
         <div class="container reveal">
             <h1>A ENGENHARIA <br>DO <span class="gold-text">LUCRO DIGITAL</span></h1>
-            <p class="section-subtitle">Mais que uma agência. Somos o braço tecnológico que transforma o seu negócio em uma máquina previsível de vendas utilizando dados, inteligência e estética de luxo.</p>
-            <a href="#roi" class="btn-master">Inicie a Transformação</a>
+            <p class="section-subtitle">Operamos o marketing de marcas que buscam alto ticket e escala. Utilizamos inteligência de dados, growth e estética de luxo para dominar o seu mercado.</p>
+            <button class="btn-master" onclick="document.getElementById('funil').scrollIntoView();">Fazer Diagnóstico do Negócio</button>
         </div>
     </section>
 
-    <section id="metricas">
+    <section id="empresa">
         <div class="container reveal">
-            <h2 class="section-title">Nossa Operação em <span class="gold-text">Tempo Real</span></h2>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <p><span class="live-dot"></span>Leads Gerenciados (Hoje)</p>
-                    <div class="metric-value" id="leads-counter">1,240</div>
-                </div>
-                <div class="metric-card">
-                    <p><span class="live-dot"></span>Anúncios Otimizados</p>
-                    <div class="metric-value" id="ads-counter">8,432</div>
-                </div>
-                <div class="metric-card">
-                    <p><span class="live-dot"></span>Crescimento de ROI Médio</p>
-                    <div class="metric-value">314%</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="empresa" class="about-section">
-        <div class="container reveal">
-            <h2 class="section-title">O Padrão Elite</h2>
-            <p class="section-subtitle">O mercado não perdoa amadorismo. Nós construímos autoridades.</p>
-            <p class="about-text">
-                Nascemos com um propósito claro: eliminar o "achismo" do marketing digital. Combinamos análise profunda de dados com um refinamento estético sem precedentes. Entendemos que a primeira impressão de uma marca define o seu valor de mercado. Por isso, nossa equipe opera com processos rigorosos, entregando campanhas que não apenas chamam atenção, mas convertem curiosos em compradores leais.
-            </p>
-        </div>
-    </section>
-
-    <section id="servicos">
-        <div class="container reveal">
-            <h2 class="section-title">Nosso Ecossistema</h2>
+            <h2 class="section-title">O Padrão Elite de Operação</h2>
+            <p class="section-subtitle">Nós não fazemos "postzinhos". Nós construímos autoridades incontestáveis e ecossistemas de vendas.</p>
             
-            <div class="tabs-container">
-                <div class="tabs-header">
-                    <button class="tab-btn active" data-target="tab-trafego">Tráfego & Dados</button>
-                    <button class="tab-btn" data-target="tab-design">Design Imersivo</button>
-                    <button class="tab-btn" data-target="tab-estrategia">Consultoria</button>
+            <div class="about-grid">
+                <div>
+                    <p class="about-text">A Agência Elite nasceu para suprir a deficiência do mercado: agências que focam em métricas de vaidade (curtidas) enquanto o cliente sangra dinheiro.</p>
+                    <p class="about-text">Nossa metodologia une a frieza matemática da <strong>Análise de Dados</strong> com o impacto emocional do <strong>Design de Alto Valor e Produção Audiovisual</strong>. Entendemos que clientes High-Ticket não compram apenas produtos; eles compram posicionamento.</p>
                 </div>
-
-                <div id="tab-trafego" class="tab-content active">
-                    <h3>Tráfego Avançado e IA</h3>
-                    <p>Gestão de mídia paga em alta performance (Meta Ads, Google Ads, TikTok). Utilizamos inteligência artificial para mapear o comportamento de compra do seu cliente ideal, reduzindo o Custo de Aquisição (CAC) e escalando seu orçamento com segurança matemática.</p>
-                </div>
-                <div id="tab-design" class="tab-content">
-                    <h3>UX/UI & Identidade Visual</h3>
-                    <p>Construímos Landing Pages e e-commerces pautados na psicologia das cores e arquitetura de luxo. A percepção de valor do seu produto aumenta imediatamente quando embalado pela nossa engenharia de design.</p>
-                </div>
-                <div id="tab-estrategia" class="tab-content">
-                    <h3>Growth Hacking</h3>
-                    <p>Analisamos todo o seu funil de vendas, do clique no anúncio até o fechamento no WhatsApp ou Checkout. Identificamos gargalos e implementamos melhorias rápidas para destrancar faturamentos paralisados.</p>
+                <div>
+                    <div class="about-card">
+                        <h4>Gestão Guiada por BI (Business Intelligence)</h4>
+                        <p>Cada real investido no seu tráfego é rastreado. Trabalhamos focados na redução do seu CPA (Custo por Aquisição) e no aumento do LTV do seu cliente.</p>
+                    </div>
+                    <div class="about-card">
+                        <h4>Estética Imersiva e Luxo</h4>
+                        <p>A percepção de valor do seu produto define o preço que você pode cobrar. Nossos designers e videomakers preparam sua marca para atrair o público Classe A.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="audiovisual" class="bg-darker">
-        <div class="container av-grid reveal">
-            <div class="av-text">
-                <h3>Captação Cinematográfica de Alta Conversão</h3>
-                <p>No marketing atual, o criativo (vídeo) é responsável por 80% do resultado do anúncio. Nossa agência conta com uma produtora própria para garantir qualidade de televisão nos seus anúncios de internet.</p>
-                <p>Nossa captação utiliza o que há de mais avançado: da agilidade mobile hiper-focada à precisão cinematográfica das lentes mirrorless, complementada por áudio cristalino e iluminação profissional de estúdio. Cada frame é matematicamente pensado para prender a atenção e vender.</p>
-                <div class="av-tags">
-                    <span class="av-tag">4K Resolution</span>
-                    <span class="av-tag">Color Grading</span>
-                    <span class="av-tag">Sound Design</span>
-                    <span class="av-tag">Directing</span>
-                </div>
-            </div>
-            <div class="av-visual">
-                <div class="rec-indicator">
-                    <div class="rec-dot"></div>
-                </div>
-                <p class="rec-text">REC &bull; STUDIO ELITE</p>
+    <section id="funil" class="funnel-section">
+        <div class="container reveal">
+            <h2 class="section-title">Diagnóstico Estratégico</h2>
+            <p class="section-subtitle">Descubra exatamente o que está travando o crescimento da sua empresa. Responda rápido para gerar seu dossiê.</p>
+            
+            <div class="funnel-container" id="quiz-container">
+                <div class="funnel-progress"><div class="funnel-bar" id="funnel-bar"></div></div>
+                
+                <div id="quiz-content"></div>
             </div>
         </div>
     </section>
 
-    <section id="roi">
+    <section id="roi" style="background-color: var(--bg-section-alt);">
         <div class="container reveal">
             <h2 class="section-title">Simulador de Escalabilidade</h2>
-            <p class="section-subtitle">Descubra o potencial do seu negócio quando operado por profissionais.</p>
-            
-            <div class="roi-wrapper">
-                <div class="calc-inputs">
-                    <label>Orçamento de Tráfego Mensal (R$)</label>
-                    <input type="number" id="inp-orcamento" value="3000">
-                    
-                    <label>Custo por Lead Esperado (R$)</label>
-                    <input type="number" id="inp-cpl" value="15">
-                    
-                    <label>Taxa de Fechamento Comercial (%)</label>
-                    <input type="number" id="inp-taxa" value="10">
-                    
-                    <label>Ticket Médio do seu Produto (R$)</label>
-                    <input type="number" id="inp-ticket" value="1500">
-                </div>
-
-                <div class="calc-display">
-                    <div class="chart-container">
-                        <div class="bar-group">
-                            <div class="bar bar-invest" id="bar-invest">
-                                <div class="chart-value" id="val-invest">R$ 3k</div>
-                            </div>
-                            <div class="bar-label">INVESTIMENTO</div>
-                        </div>
-                        <div class="bar-group">
-                            <div class="bar bar-return" id="bar-return">
-                                <div class="chart-value" id="val-return">R$ 30k</div>
-                            </div>
-                            <div class="bar-label gold-label">RETORNO</div>
-                        </div>
-                    </div>
-                    <div class="roi-final-text">
-                        Lucro Projetado:<br>
-                        <span id="txt-lucro">R$ 27.000,00</span>
-                    </div>
-                </div>
+            <p class="section-subtitle">Simulação matemática baseada em funis otimizados. Preencha os dados.</p>
+            <div style="background:var(--glass-bg); padding:40px; border-radius:30px; text-align:center; border:1px solid var(--glass-border);">
+                <h3 style="font-size:2rem; margin-bottom:20px;">Use a inteligência ao seu favor</h3>
+                <p style="color:#aaa; margin-bottom:30px;">O cálculo exato do seu Retorno sobre Investimento será elaborado por um de nossos diretores após o seu diagnóstico acima.</p>
+                <button class="btn-master" onclick="document.getElementById('funil').scrollIntoView();">Ir para o Diagnóstico</button>
             </div>
         </div>
     </section>
 
     <footer>
         <div class="container reveal">
-            <h2>Pronto para o <span class="gold-text">Próximo Nível?</span></h2>
-            <a href="https://wa.me/SEUNUMERO" class="btn-master">Falar com um Diretor</a>
-            <p class="copyright">&copy; 2026 Agência Elite Digital. Todos os direitos reservados.</p>
+            <h2>Eleve o nível do seu jogo.</h2>
+            <p style="color:#555; margin-top: 40px;">&copy; 2026 Agência Elite Digital. Todos os direitos reservados.</p>
         </div>
     </footer>
 
+    <script>
+        // --- ILHA DINÂMICA ---
+        const island = document.getElementById('dynamicIsland');
+        let islandOpen = false;
+        island.addEventListener('click', (e) => {
+            e.stopPropagation();
+            islandOpen = !islandOpen;
+            islandOpen ? island.classList.add('expanded') : island.classList.remove('expanded');
+        });
+        document.body.addEventListener('click', () => {
+            if (islandOpen) { island.classList.remove('expanded'); islandOpen = false; }
+        });
+
+        // --- OBSERVER PARA ANIMAÇÕES NO SCROLL ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- SISTEMA AVANÇADO DE ESTEIRA INTELIGENTE (QUIZ) ---
+        // Lógica condicional: Onde o cliente vai depende do que ele responde.
+        
+        const SEU_NUMERO_WHATSAPP = "5511999999999"; // COLOQUE SEU NÚMERO AQUI COM 55 DDD E NUMERO
+
+        const quizData = {
+            step1: {
+                question: "Para começarmos, qual o faturamento atual do seu negócio?",
+                progress: 25,
+                options: [
+                    { text: "Iniciando / Até R$ 20.000,00", nextStep: "step2_baixo", points: 1 }, // Frio/Morno
+                    { text: "De R$ 20.000,00 a R$ 100.000,00", nextStep: "step2_medio", points: 3 }, // Morno/Quente
+                    { text: "Mais de R$ 100.000,00 / Escalando", nextStep: "step2_alto", points: 5 }  // Quente VIP
+                ]
+            },
+            // RAMIFICAÇÃO A: Faturamento Baixo
+            step2_baixo: {
+                question: "Entendido. Qual tem sido a sua maior dor hoje para crescer?",
+                progress: 50,
+                options: [
+                    { text: "Pouco volume de leads (Ninguém chama)", nextStep: "step3_geral", points: 1 },
+                    { text: "Leads ruins/desqualificados", nextStep: "step3_geral", points: 2 },
+                    { text: "Não tenho um site/identidade profissional", nextStep: "step3_geral", points: 2 }
+                ]
+            },
+            // RAMIFICAÇÃO B: Faturamento Médio
+            step2_medio: {
+                question: "Ótimo. O que te impede de romper a barreira dos múltiplos dígitos?",
+                progress: 50,
+                options: [
+                    { text: "Tráfego estagnado, CPL muito alto", nextStep: "step3_geral", points: 3 },
+                    { text: "Comercial não converte bem", nextStep: "step3_geral", points: 3 },
+                    { text: "Meus criativos/vídeos estão ruins", nextStep: "step3_geral", points: 4 }
+                ]
+            },
+            // RAMIFICAÇÃO C: Faturamento Alto (Elite)
+            step2_alto: {
+                question: "Nível Avançado. Para dominar o mercado, onde você quer investir agressivamente?",
+                progress: 50,
+                options: [
+                    { text: "Engenharia de Dados e Escala de Ads", nextStep: "step3_geral", points: 5 },
+                    { text: "Produção Audiovisual Cinematográfica", nextStep: "step3_geral", points: 5 },
+                    { text: "Reformulação Premium de UX/UI", nextStep: "step3_geral", points: 5 }
+                ]
+            },
+            // CONVERGÊNCIA: Todo mundo vem pra cá para captar o ticket
+            step3_geral: {
+                question: "Legal. Qual é o Ticket Médio (preço) do produto/serviço que você mais vende?",
+                progress: 75,
+                options: [
+                    { text: "Até R$ 500", nextStep: "final", points: 1 },
+                    { text: "De R$ 500 a R$ 2.500", nextStep: "final", points: 3 },
+                    { text: "High-Ticket (Acima de R$ 2.500)", nextStep: "final", points: 5 }
+                ]
+            },
+            // COLETA DE DADOS FINAIS
+            final: {
+                question: "Diagnóstico finalizado. Como podemos te chamar?",
+                progress: 100,
+                isInput: true
+            }
+        };
+
+        let currentStep = "step1";
+        let userAnswers = [];
+        let totalPoints = 0;
+
+        const quizContent = document.getElementById('quiz-content');
+        const progressBar = document.getElementById('funnel-bar');
+
+        function renderStep(stepKey) {
+            const step = quizData[stepKey];
+            currentStep = stepKey;
+            progressBar.style.width = step.progress + "%";
+
+            if (step.isInput) {
+                quizContent.innerHTML = `
+                    <div class="funnel-step active">
+                        <div class="funnel-question">${step.question}</div>
+                        <input type="text" id="userName" class="funnel-input" placeholder="Digite seu Nome ou Empresa" autocomplete="off">
+                        <button class="btn-master" style="width:100%" onclick="finishQuiz()">Gerar Dossiê de Escala</button>
+                    </div>
+                `;
+                setTimeout(() => document.getElementById('userName').focus(), 100);
+            } else {
+                let optionsHtml = step.options.map((opt, index) => `
+                    <button class="funnel-btn" onclick="selectOption(${index})">${opt.text}</button>
+                `).join('');
+
+                quizContent.innerHTML = `
+                    <div class="funnel-step active">
+                        <div class="funnel-question">${step.question}</div>
+                        <div class="funnel-options">${optionsHtml}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function selectOption(index) {
+            const step = quizData[currentStep];
+            const selected = step.options[index];
+            
+            // Salva a resposta e soma pontos
+            userAnswers.push(`*Pergunta:* ${step.question}\n*Resposta:* ${selected.text}`);
+            totalPoints += selected.points;
+
+            // Animação de saída antes de chamar a próxima
+            quizContent.style.opacity = 0;
+            setTimeout(() => {
+                quizContent.style.opacity = 1;
+                renderStep(selected.nextStep);
+            }, 300);
+        }
+
+        function finishQuiz() {
+            const name = document.getElementById('userName').value.trim();
+            if (!name) { alert("Por favor, informe como podemos te chamar."); return; }
+
+            // Define a temperatura do Lead com base na inteligência dos pontos
+            let temperatura = "❄️ FRIO (Precisa de Nutrição)";
+            if (totalPoints >= 6 && totalPoints <= 10) temperatura = "🔥 MORNO (Bom potencial)";
+            if (totalPoints >= 11) temperatura = "🚀 QUENTE VIP (Fechamento Imediato)";
+
+            // Formata a mensagem para o WhatsApp do Diretor (Você)
+            let text = `*NOVO LEAD QUALIFICADO PELO SITE!* 🎯\n\n`;
+            text += `*Nome/Empresa:* ${name}\n`;
+            text += `*Temperatura Estratégica:* ${temperatura}\n\n`;
+            text += `*--- RESPOSTAS DO DIAGNÓSTICO ---*\n\n`;
+            text += userAnswers.join('\n\n');
+            text += `\n\n*Aguardando abordagem de consultoria VIP.*`;
+
+            // Codifica para URL
+            const urlEncoded = encodeURIComponent(text);
+            const linkWhatsApp = `https://wa.me/${SEU_NUMERO_WHATSAPP}?text=${urlEncoded}`;
+
+            // Efeito visual de processamento e redirecionamento
+            quizContent.innerHTML = `
+                <div class="funnel-step active">
+                    <div class="status-pulse" style="width:50px; height:50px; margin: 0 auto 20px;"></div>
+                    <div class="funnel-question">Analisando Inteligência de Dados...</div>
+                    <p style="color:#aaa;">Conectando você a um diretor Elite.</p>
+                </div>
+            `;
+
+            setTimeout(() => {
+                window.location.href = linkWhatsApp;
+            }, 2000);
+        }
+
+        // Inicia o Quiz
+        renderStep('step1');
+
+    </script>
 </body>
 </html>
