@@ -2,337 +2,451 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Agência Digital | O Alto da Tecnologia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Agência Elite Digital | O Ápice do Marketing e da Tecnologia</title>
     <style>
+        /* Variáveis de Cores: Luxo e Profundidade */
         :root {
-            --gold: #D4AF37;
-            --gold-light: #FFDF00;
-            --silver: #C0C0C0;
-            --silver-light: #E5E4E2;
-            --bg-dark: #0a0a0a;
-            --island-bg: #000000;
-            --text-main: #ffffff;
+            /* Black Absoluto */
+            --bg-absolute-black: #000000;
+            --bg-glass: rgba(10, 10, 10, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.08);
+
+            /* Dourado Complexo (Simula metal real) */
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #AA771C 75%, #FBF5B7 100%);
+            
+            /* Prata Tech (Complexo com luster) */
+            --silver-gradient: linear-gradient(135deg, #757F9A 0%, #D7DDE8 35%, #949EBC 50%, #D7DDE8 75%, #aebdd1 100%);
+            
+            --text-main: #FFFFFF;
+            --text-muted: #888888;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Remove o highlight azul padrão do iOS */
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-absolute-black);
             color: var(--text-main);
             overflow-x: hidden;
             scroll-behavior: smooth;
+            /* Garante que o fundo preto seja uniforme, mesmo em rolagem no iOS */
+            overscroll-behavior: none;
         }
 
-        /* Ilha Dinâmica (Notch) */
-        .dynamic-island-container {
+        /* Ilha Dinâmica (Notch) Refinada */
+        .island-container {
             position: fixed;
-            top: 15px;
+            top: 20px; /* Alinhado para o notch do iPhone */
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            display: flex;
-            justify-content: center;
         }
 
         .dynamic-island {
-            background-color: var(--island-bg);
+            background-color: #000000;
             border-radius: 40px;
-            width: 150px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            width: 160px;
+            height: 38px;
             overflow: hidden;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animação elástica estilo Apple */
-        }
-
-        /* Estado Expandido da Ilha */
-        .dynamic-island.expanded {
-            width: 320px;
-            height: 200px;
-            border-radius: 30px;
-        }
-
-        .island-text {
-            color: var(--silver-light);
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            transition: opacity 0.3s;
-            position: absolute;
-        }
-
-        .dynamic-island.expanded .island-text {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* Menu dentro da Ilha */
-        .island-menu {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 0 1.5px rgba(255, 255, 255, 0.08);
+            /* Animação elástica Apple: cubic-bezier(0.2, 0.8, 0.2, 1.2) */
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.2);
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .dynamic-island.expanded .island-menu {
-            opacity: 1;
-            transform: translateY(0);
-            transition-delay: 0.1s;
-        }
-
-        .island-menu a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: color 0.3s;
-        }
-
-        .island-menu a:hover {
-            color: var(--gold);
-        }
-
-        /* Seções */
-        section {
-            min-height: 100vh;
-            padding: 100px 20px 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            text-align: center;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+            justify-content: center;
             position: relative;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
-            z-index: 0;
+        .dynamic-island.expanded {
+            width: 330px;
+            height: 240px;
+            border-radius: 35px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Estado Retraído */
+        .island-notif {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0 15px;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .island-notif-text {
+            color: #aaa;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .dynamic-island.expanded .island-notif {
+            opacity: 0;
             pointer-events: none;
+            position: absolute;
+        }
+
+        /* Conteúdo Expandido */
+        .island-content {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.9);
+            transition: all 0.4s ease 0.1s;
+            width: 100%;
+        }
+
+        .dynamic-island.expanded .island-content {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        .island-content h4 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+        }
+
+        .island-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .island-menu a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: var(--silver-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+        
+        /* Feedback Tátil Visual no iOS (Efeito elástico ao tocar) */
+        .island-menu a:active {
+            transform: scale(0.97);
+        }
+
+        .island-menu a:hover {
+            opacity: 0.8;
+        }
+
+        .island-menu a span {
+            -webkit-text-fill-color: initial;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        /* Seções Generais */
+        section {
+            min-height: 100vh;
+            padding: 120px 20px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Hero Section - Vendedora */
+        .hero {
+            background: radial-gradient(circle at center, rgba(15, 15, 15, 1) 0%, rgba(0, 0, 0, 1) 100%);
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(3rem, 10vw, 7rem);
             font-weight: 900;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            z-index: 1;
-            background: linear-gradient(135deg, var(--silver-light), var(--silver), #fff);
+            letter-spacing: -3px;
+            line-height: 1.0;
+            background: linear-gradient(180deg, #FFFFFF, #aaaaaa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 20px;
         }
 
-        .hero span.gold {
-            background: linear-gradient(135deg, var(--gold-light), var(--gold), #8a7322);
+        .hero h1 span.gold {
+            background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            color: #888;
-            font-size: clamp(1rem, 3vw, 1.3rem);
-            max-width: 600px;
-            z-index: 1;
-            margin-bottom: 40px;
+            font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+            color: var(--text-muted);
+            max-width: 800px;
+            margin-bottom: 50px;
+            font-weight: 400;
+            letter-spacing: -0.3px;
         }
 
-        /* Botão Interativo */
-        .btn {
-            background: linear-gradient(135deg, var(--gold), #8a7322);
+        /* Botão Vendedor ( फीडबैक visual tátil ) */
+        .btn-elite {
+            display: inline-block;
+            background: var(--gold-gradient);
             color: #000;
-            border: none;
-            padding: 18px 45px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border-radius: 50px;
-            cursor: pointer;
-            z-index: 1;
+            text-decoration: none;
+            padding: 20px 50px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 60px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+            box-shadow: 0 15px 30px rgba(191, 149, 63, 0.3);
+        }
+
+        .btn-elite:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(191, 149, 63, 0.5);
+        }
+
+        /* Nova Seção: Inteligência e ROI (Interativa) */
+        .intelligence-section {
+            background-color: #030303;
+        }
+
+        .intelligence-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            max-width: 1100px;
+            width: 100%;
+            margin-top: 60px;
+        }
+
+        @media (min-width: 768px) {
+            .intelligence-grid {
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+            }
+        }
+
+        .int-text {
+            text-align: left;
+        }
+
+        .int-text h2 {
+            font-size: 2.8rem;
+            background: var(--silver-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: -1.5px;
+        }
+
+        .int-text p {
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        /* Calculadora de ROI */
+        .roi-calculator {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            padding: 40px;
+            border-radius: 25px;
+            text-align: left;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .roi-calculator label {
+            display: block;
+            color: #eee;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
         }
 
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Informações e Serviços */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+        .roi-calculator input {
             width: 100%;
-            max-width: 1200px;
-            margin-top: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .roi-calculator input:focus {
+            outline: none;
+            border-color: #BF953F;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 40px 30px;
-            border-radius: 20px;
-            text-align: left;
-            transition: transform 0.3s, border-color 0.3s;
-            position: relative;
-            overflow: hidden;
+        .roi-result {
+            margin-top: 10px;
+            border-top: 1px solid var(--border-glass);
+            padding-top: 25px;
+            text-align: center;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--silver);
+        .roi-result h3 {
+            color: var(--text-muted);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
         }
 
-        .card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .card:hover::after {
-            opacity: 1;
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--silver-light);
-        }
-
-        .card p {
-            color: #aaa;
-            line-height: 1.6;
-            font-size: 0.95rem;
+        .roi-value {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
         }
 
     </style>
 </head>
 <body>
 
-    <div class="dynamic-island-container">
-        <div class="dynamic-island" id="island" onclick="toggleIsland()">
-            <span class="island-text" id="island-msg">Conectando...</span>
-            <div class="island-menu">
-                <a href="#inicio" onclick="hapticFeedback()">Início</a>
-                <a href="#servicos" onclick="hapticFeedback()">Estratégia</a>
-                <a href="#contato" onclick="hapticFeedback()">Contato</a>
+    <div class="island-container">
+        <div class="dynamic-island" id="dynamicIsland" onclick="toggleIsland(event)">
+            <div class="island-notif" id="islandNotif">
+                <span class="island-notif-text">AGÊNCIA ELITE</span>
+                <span style="color:var(--gold); font-weight:900;">•</span>
+                <span class="island-notif-text">ONLINE</span>
+            </div>
+            
+            <div class="island-content">
+                <h4>Navegação de Elite</h4>
+                <div class="island-menu">
+                    <a href="#inicio" onclick="closeIsland()">INÍCIO <span>→</span></a>
+                    <a href="#inteligencia" onclick="closeIsland()">ROI E DADOS <span>→</span></a>
+                    <a href="https://wa.me/SEUNUMERO" onclick="closeIsland()" style="background:var(--gold-gradient); -webkit-background-clip: text;">FALAR COM CONSULTOR <span>→</span></a>
+                </div>
             </div>
         </div>
     </div>
 
     <section id="inicio" class="hero">
-        <h1>O ÁPICE DA <br><span class="gold">TECNOLOGIA</span></h1>
-        <p>Criamos campanhas imersivas e estratégias digitais que colocam a sua marca no futuro.</p>
-        <button class="btn" onclick="ctaAction()">Iniciar Projeto</button>
+        <h1>DOMINE SEU <br>MERCADO COM <br><span class="gold">TECNOLOGIA</span></h1>
+        <p>Não somos apenas uma agência. Somos sua estrutura de engenharia digital avançada. Escalamos faturamentos usando IA, dados precisos e a estética impecável que sua marca merece.</p>
+        <a href="https://wa.me/SEUNUMERO" class="btn-elite" id="heroCta">Escalar meu Negócio</a>
     </section>
 
-    <section id="servicos">
-        <h2 style="font-size: 2.5rem; margin-bottom: 10px; color: var(--silver-light);">Nossa Expertise</h2>
-        <p style="color: #888; margin-bottom: 40px;">Marketing guiado por dados e estética impecável.</p>
-        
-        <div class="services-grid">
-            <div class="card" onclick="hapticFeedback()">
-                <h3>Design Imersivo</h3>
-                <p>Desenvolvimento de interfaces modernas, animações de ponta e identidades visuais que capturam a atenção usando os princípios do design de luxo em Dourado e Prata.</p>
+    <section id="inteligencia" class="intelligence-section">
+        <div class="intelligence-grid">
+            <div class="int-text">
+                <h2>Cultura de Dados <br>Não é Opção</h2>
+                <p>O mercado não perdoa amadores. Na Agência Elite, cada centavo do seu investimento é rastreado por algoritmos próprios. Não vendemos curtidas, vendemos Lucro e Retorno Sobre o Investimento.</p>
+                <p>Ao lado, você pode simular como nossa estrutura audiovisual de ponta e tráfego avançado transformam seu orçamento em faturamento.</p>
             </div>
-            <div class="card" onclick="hapticFeedback()">
-                <h3>Produção Audiovisual</h3>
-                <p>Captação cinematográfica de altíssimo nível. Estrutura completa para vídeos de conversão com agilidade do iPhone 17 Pro Max, precisão de câmeras Fujifilm XT2, iluminação Ulanzi LED e áudio cristalino Hollyland.</p>
-            </div>
-            <div class="card" onclick="hapticFeedback()">
-                <h3>Growth & Performance</h3>
-                <p>Estratégias de tráfego avançado e algoritmos de ponta para escalar suas vendas e dominar o seu nicho de mercado através de dados precisos.</p>
+            
+            <div class="roi-calculator">
+                <label>Investimento Mensal (R$)</label>
+                <input type="number" id="roiBudget" value="5000" oninput="calculateROI()">
+                
+                <label>Custo por Lead (R$)</label>
+                <input type="number" id="roiCPL" value="10" oninput="calculateROI()">
+                
+                <label>Taxa de Conversão do Comercial (%)</label>
+                <input type="number" id="roiConv" value="15" oninput="calculateROI()">
+                
+                <label>Ticket Médio da Venda (R$)</label>
+                <input type="number" id="roiTicket" value="2000" oninput="calculateROI()">
+                
+                <div class="roi-result">
+                    <h3>Potencial Faturamento</h3>
+                    <p class="roi-value" id="roiResult">R$ 150.000</p>
+                    <p style="color:#aaa; font-size:0.9rem;">ROI Estimado: <strong style="color:#5f5;" id="roiPercentage">30x</strong></p>
+                </div>
             </div>
         </div>
     </section>
 
     <script>
-        const island = document.getElementById('island');
-        const islandMsg = document.getElementById('island-msg');
-        let isIslandExpanded = false;
+        const island = document.getElementById('dynamicIsland');
+        let isExpanded = false;
 
-        // Função de Vibração (Haptic Feedback)
-        function hapticFeedback(pattern = 50) {
-            // Verifica se o navegador suporta a API de vibração (A maioria dos Androids suporta)
-            if (navigator.vibrate) {
-                navigator.vibrate(pattern);
-            }
-        }
-
-        // Lógica da Ilha Dinâmica
-        function toggleIsland() {
-            hapticFeedback([30, 50, 30]); // Vibração dupla leve para a Ilha
-            
-            if (!isIslandExpanded) {
+        // Lógica da Ilha Dinâmica com feedback visual tátil
+        function toggleIsland(event) {
+            event.stopPropagation(); // Previne fechar no clique de body
+            if (!isExpanded) {
                 island.classList.add('expanded');
-                isIslandExpanded = true;
-            } else {
-                island.classList.remove('expanded');
-                isIslandExpanded = false;
+                isExpanded = true;
+                // Feedback visual de clique rápido ao toque
+                island.style.transform = "translateX(-50%) scale(0.97)";
+                setTimeout(() => island.style.transform = "translateX(-50%) scale(1)", 100);
             }
         }
 
-        // Fecha a ilha ao rolar a página
-        window.addEventListener('scroll', () => {
-            if (isIslandExpanded) {
+        function closeIsland() {
+            if (isExpanded) {
                 island.classList.remove('expanded');
-                isIslandExpanded = false;
+                isExpanded = false;
             }
-        });
+        }
 
-        // Interação de boas-vindas na Ilha ao abrir o site
+        // Fecha a ilha se clicar fora dela
+        document.body.addEventListener('click', () => closeIsland());
+
+        // Lógica da Calculadora de ROI (Lógica Vendedora)
+        function calculateROI() {
+            const budget = parseFloat(document.getElementById('roiBudget').value);
+            const cpl = parseFloat(document.getElementById('roiCPL').value);
+            const conv = parseFloat(document.getElementById('roiConv').value) / 100;
+            const ticket = parseFloat(document.getElementById('roiTicket').value);
+
+            if (budget > 0 && cpl > 0 && conv > 0 && ticket > 0) {
+                // Cálculo: Investimento / CPL = Leads. Leads * Conversão = Vendas. Vendas * Ticket = Faturamento.
+                const leads = budget / cpl;
+                const sales = leads * conv;
+                const grossRevenue = sales * ticket;
+                const profit = grossRevenue - budget;
+                const roiPercentage = profit / budget;
+
+                // Formata os números
+                const faturamentoFormatado = grossRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const roiFormatado = (roiPercentage + 1).toFixed(1) + 'x';
+
+                // Atualiza na tela
+                document.getElementById('roiResult').textContent = faturamentoFormatado;
+                document.getElementById('roiPercentage').textContent = roiFormatado;
+            } else {
+                document.getElementById('roiResult').textContent = "R$ 0";
+                document.getElementById('roiPercentage').textContent = "0x";
+            }
+        }
+
+        // Executa o cálculo inicial ao carregar a página
         window.onload = () => {
-            setTimeout(() => {
-                islandMsg.textContent = "Bem-vindo(a) à Elite";
-                hapticFeedback(40);
-                
-                setTimeout(() => {
-                    island.style.width = '120px';
-                    islandMsg.textContent = "Menu";
-                }, 3000);
-            }, 1000);
+            calculateROI();
         };
 
-        // Ação do botão principal
-        function ctaAction() {
-            hapticFeedback([50, 100, 50]); // Vibração de confirmação
-            alert("Sua jornada tecnológica começa agora. (Aqui você pode linkar para o seu WhatsApp!)");
-        }
+        // Feedback visual tátil nos CTAs principais
+        const heroCta = document.getElementById('heroCta');
+        heroCta.addEventListener('click', () => {
+             // Simulação rápida de "peso" do clique visual para iOS
+             heroCta.style.transform = "scale(0.93)";
+             setTimeout(() => heroCta.style.transform = "scale(1)", 100);
+        });
+
     </script>
 </body>
 </html>
