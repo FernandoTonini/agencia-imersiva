@@ -2,287 +2,271 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Diagnóstico Elite | Raio-X do Negócio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Agência Elite | Engenharia de Vendas e Audiovisual</title>
     <style>
         :root {
             --bg-black: #000000;
+            --bg-glass: rgba(15, 15, 15, 0.7);
             --gold: #BF953F;
-            --gold-grad: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728);
-            --border: rgba(255, 255, 255, 0.1);
+            --gold-grad: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7);
+            --silver-grad: linear-gradient(135deg, #757F9A, #D7DDE8, #949EBC);
+            --border: rgba(255, 255, 255, 0.08);
             --text-main: #fff;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-black); color: var(--text-main); display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
+        body { background-color: var(--bg-black); color: var(--text-main); overflow-x: hidden; scroll-behavior: smooth; }
         
-        /* Efeito Fundo Imersivo */
-        body::after {
-            content: ''; position: fixed; width: 800px; height: 800px;
-            background: radial-gradient(circle, rgba(191,149,63,0.08) 0%, transparent 60%);
-            top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; pointer-events: none;
+        /* Grid de Fundo */
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px; opacity: 0.1; z-index: -1;
         }
 
-        .quiz-container { width: 100%; max-width: 850px; padding: 40px 20px; text-align: center; position: relative; z-index: 1; margin: auto; }
-        
-        .progress-wrapper { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; }
-        .progress-text { color: var(--gold); font-weight: 700; font-size: 0.9rem; letter-spacing: 2px; }
-        .progress-bar-bg { flex-grow: 1; height: 6px; background: #222; border-radius: 10px; margin-left: 15px; overflow: hidden; position: relative; }
-        .progress-bar-fill { height: 100%; background: var(--gold-grad); width: 0%; transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 0 10px var(--gold); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 100px 0; position: relative; }
+        .gold-text { background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        .step-container { display: none; opacity: 0; transform: scale(0.98); transition: 0.5s ease; }
-        .step-container.active { display: block; opacity: 1; transform: scale(1); animation: slideUp 0.5s ease forwards; }
+        /* Títulos Padrão */
+        .sec-title { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; text-align: center; margin-bottom: 20px; letter-spacing: -1px; }
+        .sec-sub { text-align: center; color: #aaa; font-size: 1.1rem; max-width: 700px; margin: 0 auto 50px; line-height: 1.6; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        h2 { font-size: clamp(1.6rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 15px; line-height: 1.3; }
-        p.subtitle { color: #aaa; font-size: 1.1rem; margin-bottom: 35px; line-height: 1.5; }
-
-        .options-grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
-        @media(min-width: 768px) { .options-grid.duplo { grid-template-columns: 1fr 1fr; } }
-        
-        .option-btn {
-            background: rgba(20,20,20,0.8); border: 1px solid var(--border); color: #ddd;
-            padding: 20px 25px; border-radius: 15px; font-size: 1.05rem; font-weight: 500; cursor: pointer;
-            transition: all 0.3s; display: flex; justify-content: space-between; align-items: center; text-align: left;
-            backdrop-filter: blur(10px); line-height: 1.4;
+        /* Botão Master */
+        .btn-glow {
+            background: var(--gold-grad); color: #000; padding: 20px 50px; border-radius: 50px; text-decoration: none;
+            font-weight: 800; font-size: 1.1rem; text-transform: uppercase; display: inline-block;
+            box-shadow: 0 10px 30px rgba(191, 149, 63, 0.3); transition: 0.3s; border: none; cursor: pointer;
         }
-        .option-btn:hover { background: rgba(191, 149, 63, 0.1); border-color: var(--gold); color: #fff; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .option-btn::after { content: '✦'; opacity: 0; transition: 0.3s; color: var(--gold); font-size: 1.2rem; margin-left: 10px; }
-        .option-btn:hover::after { opacity: 1; }
+        .btn-glow:active { transform: scale(0.95); box-shadow: 0 5px 15px rgba(191, 149, 63, 0.5); }
 
-        input { width: 100%; background: #111; border: 1px solid #333; color: #fff; padding: 25px; border-radius: 15px; font-size: 1.2rem; margin-bottom: 20px; outline: none; text-align: center; transition: 0.3s; }
-        input:focus { border-color: var(--gold); box-shadow: 0 0 20px rgba(191,149,63,0.2); }
+        /* 1. HERO */
+        .hero { text-align: center; padding: 150px 0 100px; background: radial-gradient(circle at top, #111, #000 80%); }
+        .hero h1 { font-size: clamp(3rem, 7vw, 6rem); font-weight: 900; line-height: 1.05; margin-bottom: 25px; letter-spacing: -2px; }
 
-        .btn-submit { background: var(--gold-grad); color: #000; width: 100%; padding: 22px; border-radius: 15px; border: none; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; letter-spacing: 1px;}
-        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(191,149,63,0.4); }
+        /* 2. DASHBOARD LIVE */
+        .dashboard { background: var(--bg-glass); border: 1px solid var(--border); border-radius: 20px; padding: 40px; backdrop-filter: blur(10px); }
+        .dash-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; }
+        .live-dot { width: 10px; height: 10px; background: #0f0; border-radius: 50%; animation: blink 1s infinite; display: inline-block; margin-right: 8px; }
+        @keyframes blink { 50% { opacity: 0.3; } }
+        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .chart-box { background: #000; border: 1px solid #222; border-radius: 15px; padding: 20px; }
+        .chart-title { color: #888; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; }
+        .chart-value { font-size: 2.5rem; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
 
-        /* Loader Imersivo */
-        .loader-ui { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 350px; }
-        .radar { width: 70px; height: 70px; border: 2px solid rgba(191,149,63,0.3); border-radius: 50%; border-top-color: var(--gold); animation: spin 0.8s linear infinite; margin-bottom: 25px; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .typing-text { color: #fff; font-size: 1.1rem; font-weight: bold; letter-spacing: 3px; }
+        /* 3. A EMPRESA (Metodologia) */
+        .method-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        @media(min-width: 800px) { .method-grid { grid-template-columns: 1fr 1fr; } }
+        .method-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 40px; border-radius: 20px; border-left: 3px solid var(--gold); }
+        .method-card h3 { font-size: 1.8rem; margin-bottom: 15px; }
 
+        /* 4. AUDIOVISUAL */
+        .av-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .av-item { background: #050505; border: 1px solid #1a1a1a; padding: 30px; border-radius: 15px; transition: 0.3s; }
+        .av-item:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .av-item h4 { font-size: 1.3rem; margin-bottom: 10px; color: var(--gold); }
+
+        /* 5. ECOSSISTEMA DE TRÁFEGO */
+        .ecosystem-wrap { text-align: center; }
+        .eco-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 30px; }
+        .eco-tag { background: rgba(191,149,63,0.1); border: 1px solid rgba(191,149,63,0.3); color: var(--gold); padding: 10px 25px; border-radius: 30px; font-weight: bold; }
+
+        /* 6. CALCULADORA ROI INTERATIVA */
+        .roi-container { display: grid; grid-template-columns: 1fr; gap: 40px; background: var(--bg-glass); border: 1px solid var(--border); padding: 40px; border-radius: 20px; }
+        @media(min-width: 900px){ .roi-container { grid-template-columns: 1fr 1fr; } }
+        .roi-input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 10px; font-size: 1.2rem; margin-bottom: 15px; outline: none; }
+        .roi-input:focus { border-color: var(--gold); }
+        .roi-result { text-align: center; display: flex; flex-direction: column; justify-content: center; }
+        .roi-profit { font-size: 3.5rem; font-weight: 900; color: #0f0; margin: 10px 0; }
+
+        /* 7. TRACK RECORD / CASES */
+        .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .case-card { background: #000; border: 1px solid var(--border); padding: 30px; border-radius: 15px; text-align: center; }
+        .case-metric { font-size: 3rem; font-weight: 900; background: var(--silver-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* 8. FOOTER CTA */
+        footer { padding: 100px 20px 50px; text-align: center; border-top: 1px solid #111; background: #030303; }
     </style>
 </head>
 <body>
 
-    <div class="quiz-container">
-        <div class="progress-wrapper">
-            <span class="progress-text" id="step-counter">01/10</span>
-            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress"></div></div>
+    <section class="hero">
+        <div class="container reveal active">
+            <h1>DOMINE SEU MERCADO COM <br><span class="gold-text">DADOS E ESTÉTICA</span></h1>
+            <p class="sec-sub" style="font-size: 1.3rem;">Não somos uma agência tradicional. Somos uma operação de engenharia digital que une tráfego preditivo, automação e captação cinematográfica para negócios High-Ticket.</p>
+            <a href="quiz.html" class="btn-glow">Diagnóstico de Escala do Negócio</a>
         </div>
-        <div id="quiz-content"></div>
-    </div>
+    </section>
+
+    <section>
+        <div class="container reveal">
+            <h2 class="sec-title">Monitoramento Global</h2>
+            <p class="sec-sub">Algoritmos trabalhando em tempo real em nossas operações ativas.</p>
+            <div class="dashboard">
+                <div class="dash-header">
+                    <h3 style="color:#aaa; font-size:1rem;">STATUS DAS CAMPANHAS</h3>
+                    <div style="color:#0f0; font-weight:bold; font-size:0.9rem;"><span class="live-dot"></span> SYNCING DATA</div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-box">
+                        <div class="chart-title">ROAS Médio da Agência</div>
+                        <div class="chart-value" id="roas-val">4.2x</div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-title">Eventos de Conversão (Hoje)</div>
+                        <div class="chart-value" id="leads-val">14,204</div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-title">Volume Gerenciado</div>
+                        <div class="chart-value">R$ 2.4M+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: #030303; border-top: 1px solid #111; border-bottom: 1px solid #111;">
+        <div class="container reveal">
+            <h2 class="sec-title">O Padrão Elite</h2>
+            <p class="sec-sub">Marketing de esperança não funciona. Nós construímos máquinas de vendas.</p>
+            <div class="method-grid">
+                <div class="method-card">
+                    <h3>Análise de Dados (BI)</h3>
+                    <p style="color:#aaa; line-height:1.6;">Rastreamos o comportamento de compra do seu cliente ideal. Cada centavo investido no Meta Ads e Google Ads é direcionado matematicamente para reduzir seu Custo de Aquisição (CAC).</p>
+                </div>
+                <div class="method-card">
+                    <h3>UX e Design de Luxo</h3>
+                    <p style="color:#aaa; line-height:1.6;">O preço que você cobra é definido pela percepção de valor do cliente. Construímos identidades, landing pages e criativos focados em atrair e converter o público Classe A.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container reveal">
+            <h2 class="sec-title">Captação Cinematográfica</h2>
+            <p class="sec-sub">O criativo (vídeo) é responsável por 80% do resultado do tráfego pago hoje. Temos produtora própria com arsenal de ponta para sua marca.</p>
+            <div class="av-grid">
+                <div class="av-item">
+                    <h4>Mirrorless Fujifilm XT2</h4>
+                    <p style="color:#888; font-size:0.95rem;">Lentes de altíssima fidelidade e color grading de cinema para entregar anúncios master e institucionais com profundidade de campo impecável.</p>
+                </div>
+                <div class="av-item">
+                    <h4>iPhone 17 Pro Max</h4>
+                    <p style="color:#888; font-size:0.95rem;">Agilidade extrema para conteúdo nativo. Captação hiper-estabilizada em formato vertical, garantindo entrega máxima nos algoritmos do Reels e TikTok.</p>
+                </div>
+                <div class="av-item">
+                    <h4>Áudio Hollyland</h4>
+                    <p style="color:#888; font-size:0.95rem;">Sistemas de lapela sem fio de padrão internacional. Áudio cristalino e isolamento de ruído que prendem a atenção do lead no primeiro segundo.</p>
+                </div>
+                <div class="av-item">
+                    <h4>Iluminação Ulanzi LED</h4>
+                    <p style="color:#888; font-size:0.95rem;">Setup de iluminação profissional de estúdio. Criamos a atmosfera e a colorimetria exatas para transmitir autoridade e luxo nas suas gravações.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: #050505;">
+        <div class="container reveal ecosystem-wrap">
+            <h2 class="sec-title">Canais de Aquisição</h2>
+            <p class="sec-sub">Onde estiver a atenção do seu cliente comprador, nós colocaremos a sua marca.</p>
+            <div class="eco-tags">
+                <div class="eco-tag">Meta Ads (Facebook/Instagram)</div>
+                <div class="eco-tag">Google Ads Search & YouTube</div>
+                <div class="eco-tag">TikTok Ads</div>
+                <div class="eco-tag">CRM & Automação</div>
+                <div class="eco-tag">Growth Hacking</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container reveal">
+            <h2 class="sec-title">Simulador de Performance</h2>
+            <p class="sec-sub">Preencha os dados e veja a projeção matemática de uma operação bem estruturada.</p>
+            <div class="roi-container">
+                <div>
+                    <label style="color:#aaa; font-size:0.9rem;">Orçamento Mensal (R$)</label>
+                    <input type="number" id="roi-orc" class="roi-input" value="5000" oninput="calcROI()">
+                    
+                    <label style="color:#aaa; font-size:0.9rem;">Custo por Lead/Contato (R$)</label>
+                    <input type="number" id="roi-cpl" class="roi-input" value="15" oninput="calcROI()">
+                    
+                    <label style="color:#aaa; font-size:0.9rem;">Taxa de Fechamento (%)</label>
+                    <input type="number" id="roi-taxa" class="roi-input" value="10" oninput="calcROI()">
+                    
+                    <label style="color:#aaa; font-size:0.9rem;">Ticket Médio (R$)</label>
+                    <input type="number" id="roi-ticket" class="roi-input" value="2000" oninput="calcROI()">
+                </div>
+                <div class="roi-result">
+                    <h4 style="color:#aaa; text-transform:uppercase;">Faturamento Bruto Projetado</h4>
+                    <div class="roi-profit" id="roi-total">R$ 66.666,67</div>
+                    <p style="color:#888;">Retorno de <strong style="color:var(--gold);" id="roi-mult">13.3x</strong> sobre o valor investido em mídia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: #030303; border-top: 1px solid #111;">
+        <div class="container reveal">
+            <h2 class="sec-title">Nosso Rastro</h2>
+            <p class="sec-sub">Números que validam a nossa operação diária.</p>
+            <div class="cases-grid">
+                <div class="case-card">
+                    <div class="case-metric">-64%</div>
+                    <p style="color:#aaa; margin-top:10px;">Redução média no Custo de Aquisição (CAC) nos primeiros 60 dias de gestão técnica.</p>
+                </div>
+                <div class="case-card">
+                    <div class="case-metric">+3x</div>
+                    <p style="color:#aaa; margin-top:10px;">Aumento na taxa de clique (CTR) substituindo banners estáticos por Vídeos Cinematográficos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container reveal">
+            <h2 style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px;">Qual é o próximo passo?</h2>
+            <p style="color:#aaa; margin-bottom: 40px;">Passe pela nossa esteira de qualificação. Em menos de 1 minuto, a inteligência artificial vai gerar um dossiê do seu cenário para nossos diretores.</p>
+            <a href="quiz.html" class="btn-glow">Iniciar Diagnóstico Elite</a>
+            <p style="color:#555; margin-top: 80px; font-size:0.9rem;">&copy; 2026 Agência Elite. Todos os direitos reservados.</p>
+        </div>
+    </footer>
 
     <script>
-        const SEU_WHATSAPP = "5511999999999"; // INSIRA SEU NUMERO AQUI
+        // Animação Reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // O Raio-X de 10 Passos Estratégicos
-        const quizSteps = [
-            {
-                id: "q1",
-                title: "Qual o momento atual do seu faturamento?",
-                subtitle: "Nós atendemos de pequenos negócios a grandes operações. Seja transparente.",
-                options: [
-                    { text: "Iniciando / Até R$ 15.000,00 mensais", score: 1 },
-                    { text: "Tracionando: R$ 15k a R$ 50k mensais", score: 3 },
-                    { text: "Escalando: R$ 50k a R$ 200k mensais", score: 5 },
-                    { text: "Operação Elite: Mais de R$ 200k mensais", score: 8 }
-                ]
-            },
-            {
-                id: "q2",
-                title: "Qual é o objetivo mais URGENTE da sua empresa hoje?",
-                subtitle: "O que faria você dizer que nosso trabalho foi um sucesso absoluto?",
-                options: [
-                    { text: "Preciso de LEADS urgentes para vender amanhã", score: 3 },
-                    { text: "Quero me posicionar como uma marca Premium/Luxo", score: 5 },
-                    { text: "Preciso de criativos e vídeos profissionais que convertam", score: 4 },
-                    { text: "Quero terceirizar tudo: Tráfego, Design e Audiovisual", score: 6 }
-                ]
-            },
-            {
-                id: "q3",
-                title: "Olhando para o seu Marketing, onde está o maior gargalo?",
-                subtitle: "Todo negócio tem uma trava. Qual é a sua?",
-                options: [
-                    { text: "Ninguém conhece minha marca (Falta de Visibilidade)", score: 2 },
-                    { text: "Chega muita gente, mas são leads desqualificados/sem dinheiro", score: 4 },
-                    { text: "Minhas redes sociais e vídeos parecem amadores", score: 4 },
-                    { text: "Não tenho braço/tempo para cuidar do marketing", score: 5 }
-                ]
-            },
-            {
-                id: "q4",
-                title: "Como está a qualidade Audiovisual e de Imagem da sua marca?",
-                subtitle: "A percepção visual define o preço que você pode cobrar.",
-                options: [
-                    { text: "Uso fotos do celular e banco de imagens", score: 1 },
-                    { text: "Tenho vídeos caseiros, mas não geram autoridade", score: 2 },
-                    { text: "Preciso de captação cinematográfica de alta qualidade", score: 6 },
-                    { text: "Quero dominar Reels/TikTok com edições dinâmicas", score: 5 }
-                ]
-            },
-            {
-                id: "q5",
-                title: "Sobre Tráfego Pago (Anúncios Patrocinados):",
-                subtitle: "Como você gerencia o investimento nas plataformas (Meta/Google)?",
-                options: [
-                    { text: "Não faço, só uso o botão 'Turbinar' do Instagram", score: 1 },
-                    { text: "Eu mesmo tento fazer as campanhas, mas perco dinheiro", score: 2 },
-                    { text: "Tenho agência/gestor, mas o resultado estagnou", score: 4 },
-                    { text: "Invisto alto, tenho ROAS positivo e quero ESCALAR", score: 6 }
-                ]
-            },
-            {
-                id: "q6",
-                title: "Como funciona o seu fechamento de vendas?",
-                subtitle: "De nada adianta o lead chegar se o balde estiver furado.",
-                options: [
-                    { text: "Venda automática (E-commerce / Site)", score: 4 },
-                    { text: "Eu mesmo atendo um por um no WhatsApp", score: 2 },
-                    { text: "Tenho uma equipe Comercial / Closers treinados", score: 6 },
-                    { text: "Atendimento presencial em Loja/Clínica", score: 4 }
-                ]
-            },
-            {
-                id: "q7",
-                title: "Qual o Ticket Médio do que você vende?",
-                subtitle: "Isso define a agressividade do funil que vamos desenhar.",
-                options: [
-                    { text: "Produto de Entrada (Até R$ 200)", score: 2 },
-                    { text: "Mid-Ticket (De R$ 200 a R$ 1.500)", score: 4 },
-                    { text: "High-Ticket (De R$ 1.500 a R$ 5.000)", score: 6 },
-                    { text: "Consultoria/Serviços Premium (+ R$ 5.000)", score: 8 }
-                ]
-            },
-            {
-                id: "q8",
-                title: "Nossa operação exige inteligência e estrutura.",
-                subtitle: "Qual sua disponibilidade de orçamento MENSAL para investir no crescimento da empresa?",
-                options: [
-                    { text: "Até R$ 1.500 (Buscando o básico para começar)", score: 1 },
-                    { text: "De R$ 1.500 a R$ 4.000 (Pronto para estruturar)", score: 4 },
-                    { text: "De R$ 4.000 a R$ 10.000 (Foco em tração e vídeos)", score: 6 },
-                    { text: "Acima de R$ 10.000 (Orçamento para dominar o setor)", score: 10 }
-                ]
-            },
-            {
-                id: "q9",
-                title: "Qual o seu nível de urgência para resolver isso?",
-                subtitle: "Nossa agenda de captação audiovisual e setup é disputada.",
-                options: [
-                    { text: "Estou apenas pesquisando mercado", score: 1 },
-                    { text: "Quero me estruturar para os próximos 30 a 60 dias", score: 3 },
-                    { text: "Urgência máxima. Estou deixando dinheiro na mesa hoje", score: 6 }
-                ]
-            },
-            {
-                id: "q10",
-                title: "Diagnóstico Computado com Sucesso.",
-                subtitle: "Para quem o Diretor da Agência Elite deve direcionar este dossiê estratégico?",
-                isInput: true
-            }
-        ];
+        // Dashboard Live
+        setInterval(() => {
+            let roas = (4 + Math.random() * 0.8).toFixed(1);
+            document.getElementById('roas-val').innerText = roas + 'x';
+            let leadsStr = document.getElementById('leads-val').innerText.replace(',', '');
+            let leads = parseInt(leadsStr) + Math.floor(Math.random() * 3);
+            document.getElementById('leads-val').innerText = leads.toLocaleString('en-US');
+        }, 3000);
 
-        let currentIndex = 0;
-        let totalScore = 0;
-        let userResponses = [];
-        const container = document.getElementById('quiz-content');
-        const progressBar = document.getElementById('progress');
-        const stepCounter = document.getElementById('step-counter');
+        // Calculadora Interativa
+        function calcROI() {
+            const orc = parseFloat(document.getElementById('roi-orc').value) || 0;
+            const cpl = parseFloat(document.getElementById('roi-cpl').value) || 1;
+            const taxa = (parseFloat(document.getElementById('roi-taxa').value) || 0) / 100;
+            const ticket = parseFloat(document.getElementById('roi-ticket').value) || 0;
 
-        function renderCurrentStep() {
-            const step = quizSteps[currentIndex];
-            const progressPercent = ((currentIndex) / quizSteps.length) * 100;
-            
-            progressBar.style.width = progressPercent + '%';
-            stepCounter.innerText = `0${currentIndex + 1}/10`.slice(-5); // Formata para 01/10, 02/10 etc
+            const vendas = (orc / cpl) * taxa;
+            const fat = vendas * ticket;
+            const mult = orc > 0 ? (fat / orc).toFixed(1) : 0;
 
-            let html = '';
-            
-            if (step.isInput) {
-                progressBar.style.width = '100%';
-                html = `
-                    <div class="step-container active">
-                        <h2>${step.title}</h2>
-                        <p class="subtitle">${step.subtitle}</p>
-                        <input type="text" id="leadName" placeholder="Seu Nome e Empresa (Ex: Carlos - Imobiliária X)" autocomplete="off">
-                        <button class="btn-submit" onclick="finishFunnel()">Enviar para Análise Executiva</button>
-                    </div>
-                `;
-            } else {
-                // Adiciona classe 'duplo' na grid se as opções forem curtas ou houver muitas opções
-                const isDuplo = step.options.length > 3 ? 'duplo' : '';
-                
-                const optionsHtml = step.options.map((opt, i) => `
-                    <button class="option-btn" onclick="handleSelect(${i})">${opt.text}</button>
-                `).join('');
-
-                html = `
-                    <div class="step-container active">
-                        <h2>${step.title}</h2>
-                        <p class="subtitle">${step.subtitle}</p>
-                        <div class="options-grid ${isDuplo}">${optionsHtml}</div>
-                    </div>
-                `;
-            }
-            container.innerHTML = html;
+            document.getElementById('roi-total').innerText = fat.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('roi-mult').innerText = mult + 'x';
         }
-
-        function handleSelect(optIndex) {
-            const step = quizSteps[currentIndex];
-            const selected = step.options[optIndex];
-            
-            userResponses.push(`📌 *${step.title}*\n👉 ${selected.text}`);
-            totalScore += selected.score;
-
-            // Transição imersiva simulando processamento de dados (Dura 700ms)
-            container.innerHTML = `
-                <div class="loader-ui">
-                    <div class="radar"></div>
-                    <div class="typing-text">CRUZANDO DADOS...</div>
-                </div>
-            `;
-
-            setTimeout(() => {
-                currentIndex++;
-                renderCurrentStep();
-            }, 700);
-        }
-
-        function finishFunnel() {
-            const name = document.getElementById('leadName').value.trim();
-            if(!name) { alert("Por favor, preencha seu nome e o da sua empresa para finalizarmos."); return; }
-
-            // Lógica de "Scoring" Refinada do Lead (Pontuação Máxima: ~65)
-            let perfil = "⚠️ INICIANTE / BAIXO ORÇAMENTO (Necessita serviços de entrada)";
-            if(totalScore > 18 && totalScore <= 35) perfil = "🔥 EMPRESA EM CRESCIMENTO (Bom potencial para Tráfego/Conteúdo)";
-            if(totalScore > 35 && totalScore <= 48) perfil = "🚀 OPERAÇÃO MADURA (Ideal para Escala e Captação Audiovisual)";
-            if(totalScore > 48) perfil = "💎 ELITE HIGH-TICKET (Prioridade Absoluta. Orçamento Alto)";
-
-            let msg = `*NOVO DIAGNÓSTICO DE 10 PASSOS - SITE ELITE* 🎯\n\n`;
-            msg += `*Lead:* ${name}\n`;
-            msg += `*Classificação da IA:* ${perfil}\n`;
-            msg += `*Pontuação Estratégica:* ${totalScore} pontos\n\n`;
-            msg += `*--- MAPA COMPLETO DO NEGÓCIO ---*\n\n`;
-            msg += userResponses.join('\n\n');
-            msg += `\n\n*Aguardando abordagem executiva via WhatsApp.*`;
-
-            const link = `https://wa.me/${SEU_WHATSAPP}?text=${encodeURIComponent(msg)}`;
-
-            container.innerHTML = `
-                <div class="loader-ui">
-                    <div class="radar" style="border-color:#0f0; border-top-color:#0f0;"></div>
-                    <div class="typing-text" style="color:#0f0;">DOSSIÊ ENVIADO. ABRINDO CONEXÃO...</div>
-                </div>
-            `;
-
-            setTimeout(() => window.location.href = link, 1500);
-        }
-
-        // Iniciar
-        renderCurrentStep();
+        calcROI(); // Inicia com o valor padrão
     </script>
 </body>
 </html>
