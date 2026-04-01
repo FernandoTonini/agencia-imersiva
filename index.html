@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Agência Elite | Inteligência de Mercado</title>
+    <title>Agência Elite | Engenharia de Vendas e Audiovisual</title>
     <style>
         :root {
             --bg-black: #000000;
-            --bg-glass: rgba(15, 15, 15, 0.8);
+            --bg-glass: rgba(15, 15, 15, 0.7);
             --gold: #BF953F;
             --gold-grad: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7);
             --silver-grad: linear-gradient(135deg, #757F9A, #D7DDE8, #949EBC);
@@ -15,163 +15,258 @@
             --text-main: #fff;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
-        body { background-color: var(--bg-black); color: var(--text-main); overflow-x: hidden; }
+        body { background-color: var(--bg-black); color: var(--text-main); overflow-x: hidden; scroll-behavior: smooth; }
         
-        /* Background Tech Grid */
+        /* Grid de Fundo */
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 50px 50px; opacity: 0.15; z-index: -1;
+            background-size: 60px 60px; opacity: 0.1; z-index: -1;
         }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        section { padding: 100px 0; }
-        
+        section { padding: 100px 0; position: relative; }
         .gold-text { background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* Ticker Animation */
-        .ticker-wrap { width: 100%; overflow: hidden; background: var(--gold-grad); padding: 10px 0; color: #000; font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
-        .ticker { display: inline-block; white-space: nowrap; animation: ticker 20s linear infinite; }
-        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Hero */
-        .hero { text-align: center; padding: 150px 0 100px; position: relative; }
-        .hero h1 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px; letter-spacing: -2px; }
-        .hero p { font-size: 1.2rem; color: #aaa; max-width: 700px; margin: 0 auto 40px; }
-        
+        /* Títulos Padrão */
+        .sec-title { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; text-align: center; margin-bottom: 20px; letter-spacing: -1px; }
+        .sec-sub { text-align: center; color: #aaa; font-size: 1.1rem; max-width: 700px; margin: 0 auto 50px; line-height: 1.6; }
+
+        /* Botão Master */
         .btn-glow {
             background: var(--gold-grad); color: #000; padding: 20px 50px; border-radius: 50px; text-decoration: none;
             font-weight: 800; font-size: 1.1rem; text-transform: uppercase; display: inline-block;
-            box-shadow: 0 0 30px rgba(191, 149, 63, 0.4); transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(191, 149, 63, 0.3); transition: 0.3s; border: none; cursor: pointer;
         }
-        .btn-glow:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(252, 246, 186, 0.6); }
+        .btn-glow:active { transform: scale(0.95); box-shadow: 0 5px 15px rgba(191, 149, 63, 0.5); }
 
-        /* Real-time Analytics Dashboard */
-        .dashboard { background: var(--bg-glass); border: 1px solid var(--border); border-radius: 20px; padding: 40px; margin-top: 50px; backdrop-filter: blur(10px); }
-        .dash-header { display: flex; justify-content: space-between; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        .live-indicator { display: flex; align-items: center; gap: 10px; color: #0f0; font-weight: bold; font-size: 0.9rem; }
-        .live-dot { width: 10px; height: 10px; background: #0f0; border-radius: 50%; animation: blink 1s infinite; }
+        /* 1. HERO */
+        .hero { text-align: center; padding: 150px 0 100px; background: radial-gradient(circle at top, #111, #000 80%); }
+        .hero h1 { font-size: clamp(3rem, 7vw, 6rem); font-weight: 900; line-height: 1.05; margin-bottom: 25px; letter-spacing: -2px; }
+
+        /* 2. DASHBOARD LIVE */
+        .dashboard { background: var(--bg-glass); border: 1px solid var(--border); border-radius: 20px; padding: 40px; backdrop-filter: blur(10px); }
+        .dash-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; }
+        .live-dot { width: 10px; height: 10px; background: #0f0; border-radius: 50%; animation: blink 1s infinite; display: inline-block; margin-right: 8px; }
         @keyframes blink { 50% { opacity: 0.3; } }
-        
         .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
-        .chart-box { background: #000; border: 1px solid #222; border-radius: 15px; padding: 20px; position: relative; overflow: hidden; }
+        .chart-box { background: #000; border: 1px solid #222; border-radius: 15px; padding: 20px; }
         .chart-title { color: #888; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; }
         .chart-value { font-size: 2.5rem; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
-        
-        /* Animated CSS Bars */
-        .bars { display: flex; align-items: flex-end; gap: 5px; height: 60px; margin-top: 20px; }
-        .bar { width: 100%; background: var(--silver-grad); border-radius: 3px 3px 0 0; transition: height 0.3s; }
-        .bar.gold { background: var(--gold-grad); }
 
-        /* Arsenal Audiovisual */
-        .arsenal-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; margin-top: 50px; }
-        @media(min-width: 800px) { .arsenal-grid { grid-template-columns: 1fr 1fr; } }
-        .arsenal-item { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 30px; border-radius: 15px; transition: 0.3s; }
-        .arsenal-item:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .arsenal-item h3 { font-size: 1.5rem; color: #fff; margin-bottom: 10px; }
-        .arsenal-item p { color: #aaa; font-size: 0.95rem; line-height: 1.6; }
+        /* 3. A EMPRESA (Metodologia) */
+        .method-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        @media(min-width: 800px) { .method-grid { grid-template-columns: 1fr 1fr; } }
+        .method-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 40px; border-radius: 20px; border-left: 3px solid var(--gold); }
+        .method-card h3 { font-size: 1.8rem; margin-bottom: 15px; }
 
+        /* 4. AUDIOVISUAL */
+        .av-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .av-item { background: #050505; border: 1px solid #1a1a1a; padding: 30px; border-radius: 15px; transition: 0.3s; }
+        .av-item:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .av-item h4 { font-size: 1.3rem; margin-bottom: 10px; color: var(--gold); }
+
+        /* 5. ECOSSISTEMA DE TRÁFEGO */
+        .ecosystem-wrap { text-align: center; }
+        .eco-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 30px; }
+        .eco-tag { background: rgba(191,149,63,0.1); border: 1px solid rgba(191,149,63,0.3); color: var(--gold); padding: 10px 25px; border-radius: 30px; font-weight: bold; }
+
+        /* 6. CALCULADORA ROI INTERATIVA */
+        .roi-container { display: grid; grid-template-columns: 1fr; gap: 40px; background: var(--bg-glass); border: 1px solid var(--border); padding: 40px; border-radius: 20px; }
+        @media(min-width: 900px){ .roi-container { grid-template-columns: 1fr 1fr; } }
+        .roi-input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 10px; font-size: 1.2rem; margin-bottom: 15px; outline: none; }
+        .roi-input:focus { border-color: var(--gold); }
+        .roi-result { text-align: center; display: flex; flex-direction: column; justify-content: center; }
+        .roi-profit { font-size: 3.5rem; font-weight: 900; color: #0f0; margin: 10px 0; }
+
+        /* 7. TRACK RECORD / CASES */
+        .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .case-card { background: #000; border: 1px solid var(--border); padding: 30px; border-radius: 15px; text-align: center; }
+        .case-metric { font-size: 3rem; font-weight: 900; background: var(--silver-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* 8. FOOTER CTA */
+        footer { padding: 100px 20px 50px; text-align: center; border-top: 1px solid #111; background: #030303; }
     </style>
 </head>
 <body>
 
-    <div class="ticker-wrap">
-        <div class="ticker">
-            ✦ DADOS GOVERNAM O MERCADO ✦ ESCALE COM PREVISIBILIDADE ✦ DESIGN DE LUXO GERA AUTORIDADE ✦ INTELIGÊNCIA ARTIFICIAL EM ADS ✦ DADOS GOVERNAM O MERCADO ✦ ESCALE COM PREVISIBILIDADE ✦ DESIGN DE LUXO GERA AUTORIDADE ✦ INTELIGÊNCIA ARTIFICIAL EM ADS ✦
-        </div>
-    </div>
-
     <section class="hero">
-        <div class="container">
-            <h1>DOMINE SEU SETOR COM <br><span class="gold-text">DADOS E ESTÉTICA</span></h1>
-            <p>Construímos ecossistemas de vendas agressivos. Unimos a precisão matemática do tráfego pago ao refinamento do audiovisual cinematográfico.</p>
-            <a href="quiz.html" class="btn-glow">Iniciar Diagnóstico da Empresa</a>
+        <div class="container reveal active">
+            <h1>DOMINE SEU MERCADO COM <br><span class="gold-text">DADOS E ESTÉTICA</span></h1>
+            <p class="sec-sub" style="font-size: 1.3rem;">Não somos uma agência tradicional. Somos uma operação de engenharia digital que une tráfego preditivo, automação e captação cinematográfica para negócios High-Ticket.</p>
+            <a href="quiz.html" class="btn-glow">Diagnóstico de Escala do Negócio</a>
         </div>
     </section>
 
-    <section style="padding-top: 0;">
-        <div class="container">
+    <section>
+        <div class="container reveal">
+            <h2 class="sec-title">Monitoramento Global</h2>
+            <p class="sec-sub">Algoritmos trabalhando em tempo real em nossas operações ativas.</p>
             <div class="dashboard">
                 <div class="dash-header">
-                    <h3 style="color:#aaa;">Monitoramento Global de Campanhas</h3>
-                    <div class="live-indicator"><div class="live-dot"></div> SYNCING DATA</div>
+                    <h3 style="color:#aaa; font-size:1rem;">STATUS DAS CAMPANHAS</h3>
+                    <div style="color:#0f0; font-weight:bold; font-size:0.9rem;"><span class="live-dot"></span> SYNCING DATA</div>
                 </div>
                 <div class="charts-grid">
                     <div class="chart-box">
-                        <div class="chart-title">ROAS Médio (Retorno)</div>
+                        <div class="chart-title">ROAS Médio da Agência</div>
                         <div class="chart-value" id="roas-val">4.2x</div>
-                        <div class="bars" id="roas-bars">
-                            <div class="bar gold" style="height:40%"></div><div class="bar gold" style="height:60%"></div><div class="bar gold" style="height:50%"></div><div class="bar gold" style="height:80%"></div><div class="bar gold" style="height:90%"></div>
-                        </div>
                     </div>
                     <div class="chart-box">
-                        <div class="chart-title">Custo por Aquisição (CAC)</div>
-                        <div class="chart-value" id="cac-val">R$ 42,10</div>
-                        <div class="bars" id="cac-bars">
-                            <div class="bar" style="height:90%"></div><div class="bar" style="height:70%"></div><div class="bar" style="height:60%"></div><div class="bar" style="height:40%"></div><div class="bar" style="height:30%"></div>
-                        </div>
-                    </div>
-                    <div class="chart-box">
-                        <div class="chart-title">Leads Processados</div>
+                        <div class="chart-title">Eventos de Conversão (Hoje)</div>
                         <div class="chart-value" id="leads-val">14,204</div>
-                        <p style="color:#555; margin-top: 20px; font-size:0.85rem;">Volume em processamento por IA em múltiplos funis simultâneos.</p>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-title">Volume Gerenciado</div>
+                        <div class="chart-value">R$ 2.4M+</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section style="background: #030303; border-top: 1px solid var(--border);">
-        <div class="container">
-            <h2 style="font-size: 3rem; text-align:center; margin-bottom:20px;">Arsenal <span class="gold-text">Audiovisual</span></h2>
-            <p style="text-align:center; color:#aaa; max-width:800px; margin: 0 auto;">No marketing de luxo, a imagem é tudo. Não terceirizamos o ativo mais importante da sua marca. Operamos com produtora própria e equipamentos de nível internacional para gravar seus criativos.</p>
-            
-            <div class="arsenal-grid">
-                <div class="arsenal-item">
-                    <h3 class="gold-text">Cinematografia Fujifilm XT2</h3>
-                    <p>Utilizamos lentes e sensores mirrorless de alta fidelidade da Fujifilm para entregar color grading de cinema, profundidade de campo e resolução impecável para seus anúncios master.</p>
+    <section style="background: #030303; border-top: 1px solid #111; border-bottom: 1px solid #111;">
+        <div class="container reveal">
+            <h2 class="sec-title">O Padrão Elite</h2>
+            <p class="sec-sub">Marketing de esperança não funciona. Nós construímos máquinas de vendas.</p>
+            <div class="method-grid">
+                <div class="method-card">
+                    <h3>Análise de Dados (BI)</h3>
+                    <p style="color:#aaa; line-height:1.6;">Rastreamos o comportamento de compra do seu cliente ideal. Cada centavo investido no Meta Ads e Google Ads é direcionado matematicamente para reduzir seu Custo de Aquisição (CAC).</p>
                 </div>
-                <div class="arsenal-item">
-                    <h3 class="gold-text">Agilidade Mobile Dinâmica</h3>
-                    <p>Para conteúdos orgânicos e criativos nativos de TikTok/Reels, utilizamos captação hiper-estabilizada com iPhone 17 Pro Max em ProRes, garantindo o formato exato que os algoritmos entregam.</p>
-                </div>
-                <div class="arsenal-item">
-                    <h3 class="gold-text">Estúdio de Luz Ulanzi LED</h3>
-                    <p>Iluminação é o segredo da percepção de valor. Contamos com painéis Ulanzi LED configuráveis para criar a atmosfera perfeita, seja corporativa, dramática ou focada em produto.</p>
-                </div>
-                <div class="arsenal-item">
-                    <h3 class="gold-text">Áudio Imersivo Hollyland</h3>
-                    <p>Um áudio ruim destrói uma venda. Captamos vozes com clareza absoluta e isolamento de ruído através dos sistemas de microfonação sem fio de alto padrão Hollyland.</p>
+                <div class="method-card">
+                    <h3>UX e Design de Luxo</h3>
+                    <p style="color:#aaa; line-height:1.6;">O preço que você cobra é definido pela percepção de valor do cliente. Construímos identidades, landing pages e criativos focados em atrair e converter o público Classe A.</p>
                 </div>
             </div>
         </div>
     </section>
+
+    <section>
+        <div class="container reveal">
+            <h2 class="sec-title">Captação Cinematográfica</h2>
+            <p class="sec-sub">O criativo (vídeo) é responsável por 80% do resultado do tráfego pago hoje. Temos produtora própria com arsenal de ponta para sua marca.</p>
+            <div class="av-grid">
+                <div class="av-item">
+                    <h4>Mirrorless Fujifilm XT2</h4>
+                    <p style="color:#888; font-size:0.95rem;">Lentes de altíssima fidelidade e color grading de cinema para entregar anúncios master e institucionais com profundidade de campo impecável.</p>
+                </div>
+                <div class="av-item">
+                    <h4>iPhone 17 Pro Max</h4>
+                    <p style="color:#888; font-size:0.95rem;">Agilidade extrema para conteúdo nativo. Captação hiper-estabilizada em formato vertical, garantindo entrega máxima nos algoritmos do Reels e TikTok.</p>
+                </div>
+                <div class="av-item">
+                    <h4>Áudio Hollyland</h4>
+                    <p style="color:#888; font-size:0.95rem;">Sistemas de lapela sem fio de padrão internacional. Áudio cristalino e isolamento de ruído que prendem a atenção do lead no primeiro segundo.</p>
+                </div>
+                <div class="av-item">
+                    <h4>Iluminação Ulanzi LED</h4>
+                    <p style="color:#888; font-size:0.95rem;">Setup de iluminação profissional de estúdio. Criamos a atmosfera e a colorimetria exatas para transmitir autoridade e luxo nas suas gravações.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: #050505;">
+        <div class="container reveal ecosystem-wrap">
+            <h2 class="sec-title">Canais de Aquisição</h2>
+            <p class="sec-sub">Onde estiver a atenção do seu cliente comprador, nós colocaremos a sua marca.</p>
+            <div class="eco-tags">
+                <div class="eco-tag">Meta Ads (Facebook/Instagram)</div>
+                <div class="eco-tag">Google Ads Search & YouTube</div>
+                <div class="eco-tag">TikTok Ads</div>
+                <div class="eco-tag">CRM & Automação</div>
+                <div class="eco-tag">Growth Hacking</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container reveal">
+            <h2 class="sec-title">Simulador de Performance</h2>
+            <p class="sec-sub">Preencha os dados e veja a projeção matemática de uma operação bem estruturada.</p>
+            <div class="roi-container">
+                <div>
+                    <label style="color:#aaa; font-size:0.9rem;">Orçamento Mensal (R$)</label>
+                    <input type="number" id="roi-orc" class="roi-input" value="5000" oninput="calcROI()">
+                    
+                    <label style="color:#aaa; font-size:0.9rem;">Custo por Lead/Contato (R$)</label>
+                    <input type="number" id="roi-cpl" class="roi-input" value="15" oninput="calcROI()">
+                    
+                    <label style="color:#aaa; font-size:0.9rem;">Taxa de Fechamento (%)</label>
+                    <input type="number" id="roi-taxa" class="roi-input" value="10" oninput="calcROI()">
+                    
+                    <label style="color:#aaa; font-size:0.9rem;">Ticket Médio (R$)</label>
+                    <input type="number" id="roi-ticket" class="roi-input" value="2000" oninput="calcROI()">
+                </div>
+                <div class="roi-result">
+                    <h4 style="color:#aaa; text-transform:uppercase;">Faturamento Bruto Projetado</h4>
+                    <div class="roi-profit" id="roi-total">R$ 66.666,67</div>
+                    <p style="color:#888;">Retorno de <strong style="color:var(--gold);" id="roi-mult">13.3x</strong> sobre o valor investido em mídia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: #030303; border-top: 1px solid #111;">
+        <div class="container reveal">
+            <h2 class="sec-title">Nosso Rastro</h2>
+            <p class="sec-sub">Números que validam a nossa operação diária.</p>
+            <div class="cases-grid">
+                <div class="case-card">
+                    <div class="case-metric">-64%</div>
+                    <p style="color:#aaa; margin-top:10px;">Redução média no Custo de Aquisição (CAC) nos primeiros 60 dias de gestão técnica.</p>
+                </div>
+                <div class="case-card">
+                    <div class="case-metric">+3x</div>
+                    <p style="color:#aaa; margin-top:10px;">Aumento na taxa de clique (CTR) substituindo banners estáticos por Vídeos Cinematográficos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container reveal">
+            <h2 style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px;">Qual é o próximo passo?</h2>
+            <p style="color:#aaa; margin-bottom: 40px;">Passe pela nossa esteira de qualificação. Em menos de 1 minuto, a inteligência artificial vai gerar um dossiê do seu cenário para nossos diretores.</p>
+            <a href="quiz.html" class="btn-glow">Iniciar Diagnóstico Elite</a>
+            <p style="color:#555; margin-top: 80px; font-size:0.9rem;">&copy; 2026 Agência Elite. Todos os direitos reservados.</p>
+        </div>
+    </footer>
 
     <script>
-        // Simulação de Inteligência dos Gráficos em Tempo Real
+        // Animação Reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Dashboard Live
         setInterval(() => {
-            // ROAS oscilando
             let roas = (4 + Math.random() * 0.8).toFixed(1);
             document.getElementById('roas-val').innerText = roas + 'x';
-            
-            // Animando barras ROAS
-            const roasBars = document.getElementById('roas-bars').children;
-            for(let b of roasBars) b.style.height = (30 + Math.random() * 70) + '%';
-
-            // CAC caindo
-            let cac = (42 - Math.random() * 2).toFixed(2);
-            document.getElementById('cac-val').innerText = 'R$ ' + cac.replace('.', ',');
-            
-            // Animando barras CAC
-            const cacBars = document.getElementById('cac-bars').children;
-            for(let b of cacBars) b.style.height = (20 + Math.random() * 60) + '%';
-
-            // Leads subindo
             let leadsStr = document.getElementById('leads-val').innerText.replace(',', '');
-            let leads = parseInt(leadsStr) + Math.floor(Math.random() * 5);
+            let leads = parseInt(leadsStr) + Math.floor(Math.random() * 3);
             document.getElementById('leads-val').innerText = leads.toLocaleString('en-US');
+        }, 3000);
 
-        }, 2000);
+        // Calculadora Interativa
+        function calcROI() {
+            const orc = parseFloat(document.getElementById('roi-orc').value) || 0;
+            const cpl = parseFloat(document.getElementById('roi-cpl').value) || 1;
+            const taxa = (parseFloat(document.getElementById('roi-taxa').value) || 0) / 100;
+            const ticket = parseFloat(document.getElementById('roi-ticket').value) || 0;
+
+            const vendas = (orc / cpl) * taxa;
+            const fat = vendas * ticket;
+            const mult = orc > 0 ? (fat / orc).toFixed(1) : 0;
+
+            document.getElementById('roi-total').innerText = fat.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('roi-mult').innerText = mult + 'x';
+        }
+        calcROI(); // Inicia com o valor padrão
     </script>
 </body>
 </html>
