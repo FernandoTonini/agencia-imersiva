@@ -212,6 +212,13 @@ tr:hover td{background:rgba(201,162,75,.04)}
         <p style="margin-top:10px">Quando alguém completar o quiz, vai aparecer aqui automaticamente.</p>
       </div>
     </div>
+
+    <!-- INTEGRAÇÕES STATUS -->
+    <div style="margin-top:50px">
+      <h2 style="font-size:1.2rem;letter-spacing:-.5px;margin-bottom:6px">🔌 Status das integrações</h2>
+      <p style="color:#888;font-size:.85rem;margin-bottom:20px">Edite o bloco <code style="background:#111;padding:2px 6px;border-radius:4px;color:#E9C977">CONFIG</code> no topo de <code style="background:#111;padding:2px 6px;border-radius:4px;color:#E9C977">quiz.html</code>. Detalhes em <strong>INTEGRACOES.md</strong>.</p>
+      <div id="integration-status" class="stats" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))"></div>
+    </div>
   </main>
 </div>
 
@@ -279,6 +286,46 @@ function showApp(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').classList.add('active');
   refresh();
+  checkIntegrations();
+}
+
+/* =====================================
+   STATUS DAS INTEGRAÇÕES
+   Lê o quiz.html e detecta quais canais estão configurados
+   ===================================== */
+async function checkIntegrations(){
+  let cfg = { WHATSAPP_NUMBER:'', WEBHOOK_URL:'', SHEETS_WEBHOOK:'', EMAILJS_PUBLIC_KEY:'', EMAILJS_SERVICE_ID:'', EMAILJS_TEMPLATE_ID:'' };
+  try {
+    const r = await fetch('quiz.html');
+    const txt = await r.text();
+    const m = txt.match(/const CONFIG = \{([\s\S]*?)\};/);
+    if(m){
+      ['WHATSAPP_NUMBER','WEBHOOK_URL','SHEETS_WEBHOOK','EMAILJS_PUBLIC_KEY','EMAILJS_SERVICE_ID','EMAILJS_TEMPLATE_ID'].forEach(k=>{
+        const re = new RegExp(`${k}:\\s*'([^']*)'`);
+        const mm = m[1].match(re);
+        if(mm) cfg[k] = mm[1];
+      });
+    }
+  } catch(e){ console.warn('Não consegui ler quiz.html', e); }
+
+  const isPlaceholder = cfg.WHATSAPP_NUMBER === '5511999999999' || !cfg.WHATSAPP_NUMBER;
+  const emailOk = cfg.EMAILJS_PUBLIC_KEY && cfg.EMAILJS_SERVICE_ID && cfg.EMAILJS_TEMPLATE_ID;
+
+  const items = [
+    { lab:'📱 WhatsApp da agência', ok:!isPlaceholder, val:isPlaceholder?'⚠ Placeholder':'✓ '+cfg.WHATSAPP_NUMBER, hint:'Configure WHATSAPP_NUMBER no quiz.html' },
+    { lab:'📊 Google Sheets', ok:!!cfg.SHEETS_WEBHOOK, val:cfg.SHEETS_WEBHOOK?'✓ Conectado':'⚠ Não configurado', hint:'Apps Script → SHEETS_WEBHOOK' },
+    { lab:'📧 E-mail (EmailJS)', ok:emailOk, val:emailOk?'✓ Conectado':'⚠ Não configurado', hint:'3 chaves do EmailJS' },
+    { lab:'🔗 Webhook (Make/Zapier)', ok:!!cfg.WEBHOOK_URL, val:cfg.WEBHOOK_URL?'✓ Conectado':'⚠ Não configurado', hint:'WEBHOOK_URL → WhatsApp/Telegram/etc' }
+  ];
+
+  const html = items.map(i=>`
+    <div class="stat-card" style="border-left:3px solid ${i.ok?'#22ff88':'rgba(255,215,0,.5)'}">
+      <div class="lab">${i.lab}</div>
+      <div class="val" style="font-size:1.1rem;color:${i.ok?'#22ff88':'#ffd700'};letter-spacing:0">${i.val}</div>
+      <div style="color:#666;font-size:.72rem;margin-top:6px">${i.hint}</div>
+    </div>
+  `).join('');
+  document.getElementById('integration-status').innerHTML = html;
 }
 
 /* =====================================

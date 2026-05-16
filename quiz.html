@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Diagnóstico Estratégico · The Agência</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 <style>
 :root{
   --bg:#050505;
@@ -196,10 +197,34 @@ main{min-height:100vh;display:flex;align-items:center;padding:160px 24px 80px}
    - Saves to localStorage (CRM)
    ========================================= */
 
-const STORAGE_KEY='theagencia_leads';
-const WEBHOOK_URL=''; // opcional: cole aqui URL do Make/Zapier/N8N para envio remoto
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  ⚙ CONFIGURAÇÕES — leia INTEGRACOES.md para o passo-a-passo   ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+const CONFIG = {
+  // 📱 SEU WhatsApp (cliente clica no fim do quiz e cai aqui)
+  // Formato: 55 + DDD + número (só dígitos)
+  WHATSAPP_NUMBER: '5511999999999',
 
+  // 🔗 Webhook universal (Make.com / Zapier / n8n)
+  // De aqui você roteia para WhatsApp/Telegram/Slack/qualquer coisa
+  WEBHOOK_URL: '',
+
+  // 📊 Google Sheets via Apps Script (cada lead vira linha na planilha)
+  SHEETS_WEBHOOK: '',
+
+  // 📧 EmailJS (recebe e-mail formatado a cada novo lead)
+  EMAILJS_PUBLIC_KEY: '',
+  EMAILJS_SERVICE_ID: '',
+  EMAILJS_TEMPLATE_ID: ''
+};
+
+const STORAGE_KEY='theagencia_leads';
 const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+
+/* inicialização EmailJS se configurado */
+if(CONFIG.EMAILJS_PUBLIC_KEY && window.emailjs){
+  emailjs.init(CONFIG.EMAILJS_PUBLIC_KEY);
+}
 
 /* ====================================================
    QUESTION BANK — cada slot tem variantes (mesmo intent)
@@ -693,8 +718,7 @@ function showResult(){
 
   const phone=state.contact.phone.replace(/\D/g,'');
   const waMsg=encodeURIComponent(cfg.whatsapp);
-  // ⚠ Substitua pelo número real da agência
-  const waNumber='5511999999999';
+  const waNumber=CONFIG.WHATSAPP_NUMBER;
 
   document.getElementById('p-fill').style.width='100%';
 
@@ -714,12 +738,53 @@ function showResult(){
       <p style="text-align:center;color:#555;font-size:.75rem;margin-top:24px;letter-spacing:1px">DOSSIÊ #${lead.id} · ${new Date().toLocaleDateString('pt-BR')}</p>
     </div>`;
 
-  // optional webhook
-  if(WEBHOOK_URL){
-    fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)}).catch(()=>{});
+  fireIntegrations(lead);
+  sessionStorage.removeItem('lead_prefill');
+}
+
+/* ====================================================
+   FAN-OUT: dispara o lead para todos os canais configurados
+   (cada canal é independente — se falhar, os outros seguem)
+   ==================================================== */
+function fireIntegrations(lead){
+  // 1) Webhook universal (Make/Zapier/n8n)
+  if(CONFIG.WEBHOOK_URL){
+    fetch(CONFIG.WEBHOOK_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(lead)
+    }).catch(e=>console.warn('[webhook] falhou:',e));
   }
 
-  sessionStorage.removeItem('lead_prefill');
+  // 2) Google Sheets (Apps Script aceita text/plain pra evitar CORS preflight)
+  if(CONFIG.SHEETS_WEBHOOK){
+    fetch(CONFIG.SHEETS_WEBHOOK,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(lead)
+    }).catch(e=>console.warn('[sheets] falhou:',e));
+  }
+
+  // 3) EmailJS
+  if(CONFIG.EMAILJS_PUBLIC_KEY && CONFIG.EMAILJS_SERVICE_ID && CONFIG.EMAILJS_TEMPLATE_ID && window.emailjs){
+    const ans=Object.entries(lead.answers||{}).map(([k,v])=>{
+      const lab={stage:'Estágio',why_now:'Motivação',bottleneck_early:'Gargalo',bottleneck_grow:'Teto',bottleneck_scale:'Desafio',mkt_history:'Mkt prévio',budget:'Orçamento',urgency:'Urgência',decision:'Decisor',priorities:'Prioridades',context:'Contexto'}[k]||k;
+      const val=v.value||(v.labels?v.labels.join(', '):v.label)||'—';
+      return `${lab}: ${val}`;
+    }).join('\n');
+    emailjs.send(CONFIG.EMAILJS_SERVICE_ID,CONFIG.EMAILJS_TEMPLATE_ID,{
+      lead_id:lead.id,
+      tier:lead.tier.toUpperCase(),
+      score:lead.score,
+      name:lead.contact.name,
+      biz:lead.contact.biz,
+      phone:lead.contact.phone,
+      email:lead.contact.email,
+      ig:lead.contact.ig||'—',
+      answers_summary:ans,
+      created_at:new Date(lead.createdAt).toLocaleString('pt-BR')
+    }).catch(e=>console.warn('[email] falhou:',e));
+  }
 }
 
 function saveLead(lead){
