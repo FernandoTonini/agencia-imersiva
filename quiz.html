@@ -1,272 +1,759 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Agência Elite | Engenharia de Vendas e Audiovisual</title>
-    <style>
-        :root {
-            --bg-black: #000000;
-            --bg-glass: rgba(15, 15, 15, 0.7);
-            --gold: #BF953F;
-            --gold-grad: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7);
-            --silver-grad: linear-gradient(135deg, #757F9A, #D7DDE8, #949EBC);
-            --border: rgba(255, 255, 255, 0.08);
-            --text-main: #fff;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
-        body { background-color: var(--bg-black); color: var(--text-main); overflow-x: hidden; scroll-behavior: smooth; }
-        
-        /* Grid de Fundo */
-        body::before {
-            content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 60px 60px; opacity: 0.1; z-index: -1;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Diagnóstico Estratégico · The Agência</title>
+<style>
+:root{
+  --bg:#050505;
+  --gold:#C9A24B;
+  --gold-soft:#E9C977;
+  --gold-grad:linear-gradient(135deg,#9C6F2B 0%,#E9C977 35%,#FCEFB3 50%,#C9A24B 70%,#7A4E16 100%);
+  --neon:#7CF5FF;
+  --border:rgba(255,255,255,.08);
+  --text:#fff;
+  --muted:#9a9a9a;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display',-apple-system,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font:inherit}
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        section { padding: 100px 0; position: relative; }
-        .gold-text { background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+/* BG */
+#bg{position:fixed;inset:0;z-index:-2;opacity:.8}
+body::before{
+  content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:80px 80px;z-index:-1;
+  mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%);
+}
+body::after{
+  content:'';position:fixed;top:-20%;right:-20%;width:60%;height:60%;background:radial-gradient(circle,rgba(201,162,75,.1),transparent 60%);filter:blur(60px);z-index:-1;animation:floatG 16s ease-in-out infinite alternate;
+}
+@keyframes floatG{to{transform:translate(-40vw,30vh)}}
 
-        /* Títulos Padrão */
-        .sec-title { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; text-align: center; margin-bottom: 20px; letter-spacing: -1px; }
-        .sec-sub { text-align: center; color: #aaa; font-size: 1.1rem; max-width: 700px; margin: 0 auto 50px; line-height: 1.6; }
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 28px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:rgba(5,5,5,.6);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.05rem}
+.brand-mark{width:28px;height:28px;background:var(--gold-grad);border-radius:7px;position:relative}
+.brand-mark::after{content:'A';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:1rem}
+.brand span{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.exit{font-size:.85rem;color:#888;transition:.2s}
+.exit:hover{color:var(--gold-soft)}
 
-        /* Botão Master */
-        .btn-glow {
-            background: var(--gold-grad); color: #000; padding: 20px 50px; border-radius: 50px; text-decoration: none;
-            font-weight: 800; font-size: 1.1rem; text-transform: uppercase; display: inline-block;
-            box-shadow: 0 10px 30px rgba(191, 149, 63, 0.3); transition: 0.3s; border: none; cursor: pointer;
-        }
-        .btn-glow:active { transform: scale(0.95); box-shadow: 0 5px 15px rgba(191, 149, 63, 0.5); }
+/* PROGRESS */
+.prog-wrap{position:fixed;top:65px;left:0;right:0;z-index:99;padding:14px 28px;backdrop-filter:blur(20px);background:rgba(5,5,5,.5);border-bottom:1px solid var(--border)}
+.prog-info{display:flex;justify-content:space-between;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:10px}
+.prog-info .step{color:var(--gold-soft)}
+.prog-bar{height:3px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden}
+.prog-fill{height:100%;background:var(--gold-grad);width:0;transition:width .6s cubic-bezier(.2,.7,.2,1);box-shadow:0 0 12px var(--gold)}
 
-        /* 1. HERO */
-        .hero { text-align: center; padding: 150px 0 100px; background: radial-gradient(circle at top, #111, #000 80%); }
-        .hero h1 { font-size: clamp(3rem, 7vw, 6rem); font-weight: 900; line-height: 1.05; margin-bottom: 25px; letter-spacing: -2px; }
+/* MAIN */
+main{min-height:100vh;display:flex;align-items:center;padding:160px 24px 80px}
+.stage{max-width:780px;margin:0 auto;width:100%}
 
-        /* 2. DASHBOARD LIVE */
-        .dashboard { background: var(--bg-glass); border: 1px solid var(--border); border-radius: 20px; padding: 40px; backdrop-filter: blur(10px); }
-        .dash-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; }
-        .live-dot { width: 10px; height: 10px; background: #0f0; border-radius: 50%; animation: blink 1s infinite; display: inline-block; margin-right: 8px; }
-        @keyframes blink { 50% { opacity: 0.3; } }
-        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
-        .chart-box { background: #000; border: 1px solid #222; border-radius: 15px; padding: 20px; }
-        .chart-title { color: #888; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; }
-        .chart-value { font-size: 2.5rem; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+.question-frame{
+  background:linear-gradient(160deg,rgba(20,20,20,.6),rgba(5,5,5,.6));
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:48px;
+  backdrop-filter:blur(20px);
+  position:relative;
+  overflow:hidden;
+  animation:slideIn .7s cubic-bezier(.2,.7,.2,1);
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.question-frame::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.q-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border:1px solid var(--border);border-radius:50px;
+  font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold-soft);margin-bottom:24px;
+}
+.q-eyebrow .dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:blink 1.5s infinite}
+@keyframes blink{50%{opacity:.3}}
+.q-text{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:800;line-height:1.2;letter-spacing:-1px;margin-bottom:14px}
+.q-hint{color:var(--muted);font-size:.95rem;margin-bottom:34px;line-height:1.55}
 
-        /* 3. A EMPRESA (Metodologia) */
-        .method-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-        @media(min-width: 800px) { .method-grid { grid-template-columns: 1fr 1fr; } }
-        .method-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 40px; border-radius: 20px; border-left: 3px solid var(--gold); }
-        .method-card h3 { font-size: 1.8rem; margin-bottom: 15px; }
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 24px;
+  text-align:left;
+  transition:.3s cubic-bezier(.2,.7,.2,1);
+  position:relative;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-size:1rem;
+  font-weight:500;
+  width:100%;
+}
+.opt:hover{border-color:var(--gold);transform:translateX(6px);background:rgba(201,162,75,.05)}
+.opt.selected{border-color:var(--gold);background:linear-gradient(90deg,rgba(201,162,75,.12),rgba(201,162,75,.02));box-shadow:0 10px 30px -10px rgba(201,162,75,.4)}
+.opt-arrow{color:#444;transition:.3s}
+.opt:hover .opt-arrow,.opt.selected .opt-arrow{color:var(--gold-soft);transform:translateX(4px)}
 
-        /* 4. AUDIOVISUAL */
-        .av-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
-        .av-item { background: #050505; border: 1px solid #1a1a1a; padding: 30px; border-radius: 15px; transition: 0.3s; }
-        .av-item:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .av-item h4 { font-size: 1.3rem; margin-bottom: 10px; color: var(--gold); }
+/* INPUT */
+.field{margin-bottom:20px}
+.field label{display:block;color:#888;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+.field input,.field textarea,.field select{
+  width:100%;background:rgba(0,0,0,.5);border:1px solid var(--border);color:#fff;padding:16px 18px;border-radius:12px;font-size:1rem;outline:none;transition:.3s;
+}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,162,75,.1)}
+.field textarea{resize:vertical;min-height:90px;font-family:inherit}
 
-        /* 5. ECOSSISTEMA DE TRÁFEGO */
-        .ecosystem-wrap { text-align: center; }
-        .eco-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 30px; }
-        .eco-tag { background: rgba(191,149,63,0.1); border: 1px solid rgba(191,149,63,0.3); color: var(--gold); padding: 10px 25px; border-radius: 30px; font-weight: bold; }
+/* FOOT */
+.q-foot{margin-top:30px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.btn{padding:14px 28px;border-radius:50px;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:1.5px;transition:.3s;display:inline-flex;align-items:center;gap:10px}
+.btn-primary{background:var(--gold-grad);color:#000;box-shadow:0 15px 40px -10px rgba(201,162,75,.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 50px -10px rgba(201,162,75,.6)}
+.btn-primary:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.btn-ghost{color:#888}
+.btn-ghost:hover{color:#fff}
 
-        /* 6. CALCULADORA ROI INTERATIVA */
-        .roi-container { display: grid; grid-template-columns: 1fr; gap: 40px; background: var(--bg-glass); border: 1px solid var(--border); padding: 40px; border-radius: 20px; }
-        @media(min-width: 900px){ .roi-container { grid-template-columns: 1fr 1fr; } }
-        .roi-input { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 15px; border-radius: 10px; font-size: 1.2rem; margin-bottom: 15px; outline: none; }
-        .roi-input:focus { border-color: var(--gold); }
-        .roi-result { text-align: center; display: flex; flex-direction: column; justify-content: center; }
-        .roi-profit { font-size: 3.5rem; font-weight: 900; color: #0f0; margin: 10px 0; }
+/* MULTI SELECT */
+.multi-hint{font-size:.8rem;color:#666;margin-bottom:14px}
+.opt.selected.multi::after{content:'✓';position:absolute;right:24px;color:var(--gold-soft);font-weight:900}
+.opt.multi .opt-arrow{display:none}
 
-        /* 7. TRACK RECORD / CASES */
-        .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .case-card { background: #000; border: 1px solid var(--border); padding: 30px; border-radius: 15px; text-align: center; }
-        .case-metric { font-size: 3rem; font-weight: 900; background: var(--silver-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+/* SLIDER */
+.slider-wrap{padding:20px 0}
+.slider-val{font-size:2.5rem;font-weight:900;text-align:center;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:20px;letter-spacing:-1px}
+.slider{-webkit-appearance:none;width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:10px;outline:none}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;background:var(--gold-grad);border-radius:50%;cursor:pointer;box-shadow:0 0 16px var(--gold)}
+.slider::-moz-range-thumb{width:24px;height:24px;background:#C9A24B;border-radius:50%;cursor:pointer;border:none;box-shadow:0 0 16px var(--gold)}
+.slider-labels{display:flex;justify-content:space-between;color:#666;font-size:.75rem;margin-top:14px;letter-spacing:1px}
 
-        /* 8. FOOTER CTA */
-        footer { padding: 100px 20px 50px; text-align: center; border-top: 1px solid #111; background: #030303; }
-    </style>
+/* RESULT */
+.result-icon{font-size:4rem;text-align:center;margin-bottom:20px;animation:popIn .8s cubic-bezier(.2,.7,.2,1)}
+@keyframes popIn{from{transform:scale(0) rotate(-180deg)}to{transform:scale(1) rotate(0)}}
+.result-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;text-align:center;margin-bottom:14px;letter-spacing:-1.5px}
+.result-sub{text-align:center;color:#bbb;font-size:1.05rem;margin-bottom:34px;line-height:1.55}
+.score-card{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;text-align:center}
+.score-tier{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold-soft);margin-bottom:10px}
+.tier-hot .score-tier{color:#ff6b6b}
+.tier-warm .score-tier{color:#ffd700}
+.tier-cold .score-tier{color:var(--neon)}
+.score-value{font-size:3.5rem;font-weight:900;letter-spacing:-2px;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tier-hot .score-value{background:linear-gradient(135deg,#ff6b6b,#ffd700);-webkit-background-clip:text;background-clip:text}
+.tier-cold .score-value{background:linear-gradient(135deg,#7CF5FF,#9B6BFF);-webkit-background-clip:text;background-clip:text}
+
+.cta-row{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+.btn-block{width:100%;justify-content:center;padding:18px}
+
+/* LOADER ANALYZING */
+.analyzing{text-align:center;padding:40px 0}
+.analyzing-spin{width:80px;height:80px;border:2px solid rgba(201,162,75,.2);border-top-color:var(--gold);border-radius:50%;margin:0 auto 30px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.analyzing-text{color:#aaa;font-size:.95rem;letter-spacing:1px;animation:fade 1.4s ease-in-out infinite}
+@keyframes fade{50%{opacity:.4}}
+.analyzing-steps{margin-top:28px;display:flex;flex-direction:column;gap:8px;max-width:340px;margin-left:auto;margin-right:auto;text-align:left}
+.an-step{font-size:.83rem;color:#666;padding:8px 14px;border-left:2px solid #222;transition:.4s}
+.an-step.active{color:var(--gold-soft);border-left-color:var(--gold)}
+.an-step.done{color:#0f0;border-left-color:#0f0}
+.an-step.done::before{content:'✓ '}
+
+@media(max-width:780px){
+  .question-frame{padding:32px 24px}
+  main{padding:140px 16px 60px}
+  .opt{padding:18px 20px;font-size:.95rem}
+  .q-foot{flex-direction:column-reverse}
+  .q-foot .btn{width:100%;justify-content:center}
+}
+</style>
 </head>
 <body>
 
-    <section class="hero">
-        <div class="container reveal active">
-            <h1>DOMINE SEU MERCADO COM <br><span class="gold-text">DADOS E ESTÉTICA</span></h1>
-            <p class="sec-sub" style="font-size: 1.3rem;">Não somos uma agência tradicional. Somos uma operação de engenharia digital que une tráfego preditivo, automação e captação cinematográfica para negócios High-Ticket.</p>
-            <a href="quiz.html" class="btn-glow">Diagnóstico de Escala do Negócio</a>
+<canvas id="bg"></canvas>
+
+<header>
+  <a href="index.html" class="brand"><span class="brand-mark"></span><span>The Agência</span></a>
+  <a href="index.html" class="exit">Sair ✕</a>
+</header>
+
+<div class="prog-wrap">
+  <div class="prog-info">
+    <span>Diagnóstico em andamento</span>
+    <span class="step"><span id="p-cur">1</span> / <span id="p-tot">8</span></span>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="p-fill"></div></div>
+</div>
+
+<main>
+  <div class="stage" id="stage">
+    <!-- injected -->
+  </div>
+</main>
+
+<script>
+/* =========================================
+   THE AGÊNCIA — SMART ADAPTIVE QUIZ ENGINE
+   - Branching by answer
+   - Variant wording per user
+   - Hot/Warm/Cold scoring
+   - Saves to localStorage (CRM)
+   ========================================= */
+
+const STORAGE_KEY='theagencia_leads';
+const WEBHOOK_URL=''; // opcional: cole aqui URL do Make/Zapier/N8N para envio remoto
+
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+
+/* ====================================================
+   QUESTION BANK — cada slot tem variantes (mesmo intent)
+   ==================================================== */
+const QBANK={
+
+  /* SLOT 1: STAGE (sempre primeiro) */
+  stage:{
+    intent:'business_stage',
+    variants:[
+      {
+        eyebrow:'Capítulo 01',
+        text:'Em qual momento sua empresa está agora?',
+        hint:'Seja honesto. A resposta certa é a verdadeira — vai mudar a próxima pergunta.'
+      },
+      {
+        eyebrow:'Ponto de partida',
+        text:'Onde você está no jogo hoje?',
+        hint:'Quanto mais real, mais útil será o diagnóstico que vamos gerar para você.'
+      },
+      {
+        eyebrow:'Diagnóstico · etapa 1',
+        text:'Qual é a fase atual do seu negócio?',
+        hint:'Não tem resposta errada. Cada estágio tem uma estratégia diferente.'
+      }
+    ],
+    options:[
+      {id:'idea',label:'Ideia ou validação · ainda não fatura',score:1,next:'why_now'},
+      {id:'early',label:'Operando, mas faturando pouco (até R$ 30k/mês)',score:2,next:'bottleneck_early'},
+      {id:'growing',label:'Faturando consistente (R$ 30k a R$ 150k/mês)',score:3,next:'bottleneck_grow'},
+      {id:'scaling',label:'Escalando alto (R$ 150k+ /mês)',score:4,next:'bottleneck_scale'}
+    ]
+  },
+
+  /* RAMIFICAÇÃO A — early stage / não fatura */
+  why_now:{
+    intent:'motivation',
+    variants:[
+      {eyebrow:'Capítulo 02',text:'O que te trouxe aqui hoje?',hint:'Marketing começa pela motivação real do fundador.'},
+      {eyebrow:'Razão por trás',text:'Por que decidiu procurar marketing agora?',hint:'A força que te puxou para cá vai definir a estratégia.'},
+      {eyebrow:'Capítulo 02',text:'O que você espera resolver com marketing?',hint:'Sem clareza disso, qualquer ação é palpite.'}
+    ],
+    options:[
+      {id:'launch',label:'Quero lançar minha marca com força',score:2,next:'mkt_history'},
+      {id:'validate',label:'Preciso validar se o mercado quer o que vendo',score:1,next:'mkt_history'},
+      {id:'reposition',label:'Quero reposicionar para vender mais caro',score:3,next:'mkt_history'},
+      {id:'explore',label:'Só estou explorando, sem urgência',score:0,next:'mkt_history'}
+    ]
+  },
+
+  bottleneck_early:{
+    intent:'pain_point',
+    variants:[
+      {eyebrow:'Capítulo 02',text:'O que mais trava o seu crescimento hoje?',hint:'Identifique o gargalo principal. É o que vamos resolver primeiro.'},
+      {eyebrow:'Diagnóstico de gargalo',text:'Qual problema mais te incomoda na sua operação?',hint:'O gargalo é único por negócio. Vamos achar o seu.'},
+      {eyebrow:'Capítulo 02',text:'Onde a sua máquina de vendas falha hoje?',hint:'Resposta direta — vai direcionar todo o plano.'}
+    ],
+    options:[
+      {id:'no_lead',label:'Quase ninguém me conhece · não chega lead',score:2,next:'mkt_history'},
+      {id:'no_conv',label:'Tenho audiência, mas ninguém compra',score:3,next:'mkt_history'},
+      {id:'cheap',label:'Vendo, mas o ticket é baixo demais',score:3,next:'mkt_history'},
+      {id:'no_brand',label:'Marca confusa, não passa autoridade',score:2,next:'mkt_history'}
+    ]
+  },
+
+  bottleneck_grow:{
+    intent:'pain_point',
+    variants:[
+      {eyebrow:'Capítulo 02',text:'Onde está o teto da sua operação atual?',hint:'Quem fatura R$ 30k+ sabe onde a operação trava. Aponte o ponto.'},
+      {eyebrow:'Diagnóstico',text:'Qual é o limite que sua máquina não ultrapassa hoje?',hint:'Existe um ponto que segura sua escala. Vamos identificar.'},
+      {eyebrow:'Capítulo 02',text:'O que está te impedindo de dobrar o faturamento?',hint:'A resposta aqui define todo o plano de 90 dias.'}
+    ],
+    options:[
+      {id:'cac',label:'CAC subiu · cada lead custa mais caro',score:4,next:'mkt_history'},
+      {id:'conv_rate',label:'Lead chega, mas conversão está baixa',score:4,next:'mkt_history'},
+      {id:'sales_team',label:'Equipe comercial não dá conta ou perde lead',score:4,next:'mkt_history'},
+      {id:'creative',label:'Criativo cansou · campanhas estão saturadas',score:4,next:'mkt_history'}
+    ]
+  },
+
+  bottleneck_scale:{
+    intent:'pain_point',
+    variants:[
+      {eyebrow:'Capítulo 02',text:'Qual o desafio de quem fatura no seu nível?',hint:'No seu estágio, os problemas são outros. Aponte o real.'},
+      {eyebrow:'War room',text:'O que tira seu sono em uma operação que já fatura alto?',hint:'Resposta crua — vai direto pro plano de batalha.'},
+      {eyebrow:'Capítulo 02',text:'Em que ponto sua operação está pedindo evolução?',hint:'No seu nível, evolução é estratégica, não operacional.'}
+    ],
+    options:[
+      {id:'ltv',label:'Preciso aumentar LTV e recompra',score:5,next:'mkt_history'},
+      {id:'omni',label:'Quero diversificar canais e reduzir dependência',score:5,next:'mkt_history'},
+      {id:'brand',label:'Marca não acompanhou o crescimento da operação',score:5,next:'mkt_history'},
+      {id:'expand',label:'Quero abrir nova vertical / expandir geograficamente',score:5,next:'mkt_history'}
+    ]
+  },
+
+  /* SLOT 3: HISTÓRICO DE MARKETING */
+  mkt_history:{
+    intent:'marketing_maturity',
+    variants:[
+      {eyebrow:'Capítulo 03',text:'Como é a sua relação com marketing pago hoje?',hint:'Marketing pago é exato. Onde você está nessa esteira?'},
+      {eyebrow:'Histórico',text:'Já investiu em tráfego pago antes?',hint:'Sua experiência prévia muda totalmente o ponto de partida.'},
+      {eyebrow:'Capítulo 03',text:'Qual é a sua maturidade com Meta / Google / TikTok Ads?',hint:'Sem julgamento. Estamos medindo onde começar.'}
+    ],
+    options:[
+      {id:'never',label:'Nunca investi · não sei por onde começar',score:1,next:'budget'},
+      {id:'tried_failed',label:'Já investi, mas não trouxe resultado',score:3,next:'budget'},
+      {id:'self',label:'Faço sozinho ou com freelancer',score:3,next:'budget'},
+      {id:'agency',label:'Tenho agência, mas quero algo melhor',score:5,next:'budget'}
+    ]
+  },
+
+  /* SLOT 4: ORÇAMENTO */
+  budget:{
+    intent:'budget',
+    variants:[
+      {eyebrow:'Capítulo 04',text:'Qual o investimento mensal disponível para crescer?',hint:'Inclui mídia + agência. Resposta honesta = plano realista.'},
+      {eyebrow:'Capital de marketing',text:'Quanto sua empresa pode alocar por mês em marketing?',hint:'Não falamos do que gostaria. Falamos do que está disponível.'},
+      {eyebrow:'Capítulo 04',text:'Qual o orçamento mensal de marketing realista hoje?',hint:'Marketing precisa de combustível constante. Quanto há?'}
+    ],
+    options:[
+      {id:'under_3k',label:'Abaixo de R$ 3.000/mês',score:1,next:'urgency'},
+      {id:'3_10k',label:'Entre R$ 3.000 e R$ 10.000/mês',score:2,next:'urgency'},
+      {id:'10_30k',label:'Entre R$ 10.000 e R$ 30.000/mês',score:4,next:'urgency'},
+      {id:'30k_plus',label:'Acima de R$ 30.000/mês',score:6,next:'urgency'}
+    ]
+  },
+
+  /* SLOT 5: URGÊNCIA */
+  urgency:{
+    intent:'urgency',
+    variants:[
+      {eyebrow:'Capítulo 05',text:'Quando quer começar a executar?',hint:'Urgência define prioridade na nossa esteira.'},
+      {eyebrow:'Janela',text:'Em quanto tempo precisa de resultado?',hint:'Resposta direta — vai definir nosso compromisso de prazo.'},
+      {eyebrow:'Capítulo 05',text:'Qual sua janela de decisão?',hint:'Estratégia muda totalmente se é "hoje" ou "daqui a 6 meses".'}
+    ],
+    options:[
+      {id:'asap',label:'Imediato · preciso virar a chave já',score:5,next:'decision'},
+      {id:'30d',label:'Próximos 30 dias',score:4,next:'decision'},
+      {id:'90d',label:'Próximos 90 dias',score:2,next:'decision'},
+      {id:'exploring',label:'Estou só pesquisando, sem prazo',score:0,next:'decision'}
+    ]
+  },
+
+  /* SLOT 6: PODER DE DECISÃO */
+  decision:{
+    intent:'decision_power',
+    variants:[
+      {eyebrow:'Capítulo 06',text:'Qual é o seu papel na decisão de contratar?',hint:'Falamos com quem decide. Direto.'},
+      {eyebrow:'Mesa de decisão',text:'Quem aprova essa contratação?',hint:'Não tem certo ou errado. Só nos ajuda a calibrar a conversa.'},
+      {eyebrow:'Capítulo 06',text:'Quem bate o martelo na contratação?',hint:'Honestidade aqui acelera tudo na próxima etapa.'}
+    ],
+    options:[
+      {id:'owner',label:'Sou o dono · decisão única minha',score:5,next:'priorities'},
+      {id:'partner',label:'Sou sócio · decido com outros',score:4,next:'priorities'},
+      {id:'cmo',label:'Sou gestor / diretor de marketing',score:3,next:'priorities'},
+      {id:'other',label:'Estou pesquisando para alguém',score:1,next:'priorities'}
+    ]
+  },
+
+  /* SLOT 7: PRIORIDADES (MULTI) */
+  priorities:{
+    intent:'priorities',
+    multi:true,
+    variants:[
+      {eyebrow:'Capítulo 07',text:'O que você mais quer da The Agência?',hint:'Pode marcar quantas opções fizerem sentido.'},
+      {eyebrow:'Expectativa',text:'Quais entregas mais te interessam?',hint:'Múltipla escolha. Quanto mais selecionar, mais completo será o escopo.'},
+      {eyebrow:'Capítulo 07',text:'Em quais frentes precisa de suporte?',hint:'Selecione todas que se aplicam.'}
+    ],
+    options:[
+      {id:'traffic',label:'Gestão técnica de tráfego pago',score:1,next:'context'},
+      {id:'video',label:'Audiovisual e criativos em vídeo',score:1,next:'context'},
+      {id:'branding',label:'Branding e identidade visual',score:1,next:'context'},
+      {id:'crm',label:'Estruturação de CRM e automação',score:1,next:'context'},
+      {id:'lp',label:'Landing pages e funis de venda',score:1,next:'context'},
+      {id:'strategy',label:'Consultoria estratégica executiva',score:2,next:'context'}
+    ]
+  },
+
+  /* SLOT 8: CONTEXTO ABERTO */
+  context:{
+    intent:'context',
+    variants:[
+      {eyebrow:'Capítulo 08',text:'Conte rapidamente sobre seu negócio',hint:'Nicho, ticket médio, principal produto/serviço. Quanto mais detalhe, melhor o plano.'},
+      {eyebrow:'O cenário',text:'Em uma frase: o que sua empresa faz e para quem?',hint:'Esse é o resumo que nossos diretores vão ler primeiro.'},
+      {eyebrow:'Capítulo 08',text:'O que sua empresa vende, e qual o ticket médio?',hint:'Informação direta — vai pra mesa estratégica.'}
+    ],
+    field:'textarea',
+    next:'capture'
+  },
+
+  /* SLOT 9: CAPTURA DE CONTATO */
+  capture:{
+    intent:'contact',
+    variants:[
+      {eyebrow:'Última etapa',text:'Para enviarmos seu dossiê estratégico',hint:'Em até 24h nossos diretores entram em contato com um pré-plano.'},
+      {eyebrow:'Finalizando',text:'Onde enviamos seu diagnóstico personalizado?',hint:'Geramos o relatório com base nas suas respostas e enviamos no seu WhatsApp.'},
+      {eyebrow:'Última etapa',text:'Onde podemos te encontrar?',hint:'Dossiê pronto. Falta só onde mandar.'}
+    ],
+    form:true,
+    next:null
+  }
+};
+
+/* ====================
+   STATE
+   ==================== */
+const state={
+  path:[],       // sequência de slot IDs
+  answers:{},    // {slot: answer}
+  variants:{},   // {slot: variantIdx}
+  current:0,
+  startTime:Date.now(),
+  fingerprint:'tag_'+Math.random().toString(36).slice(2,9)
+};
+
+/* prefill from landing */
+const prefill=JSON.parse(sessionStorage.getItem('lead_prefill')||'null');
+
+/* ====================
+   ENGINE
+   ==================== */
+function startQuiz(){
+  state.path=['stage'];
+  state.current=0;
+  render();
+}
+
+function render(){
+  const slotId=state.path[state.current];
+  const slot=QBANK[slotId];
+  // pick variant if not chosen yet
+  if(state.variants[slotId]===undefined){
+    state.variants[slotId]=Math.floor(Math.random()*slot.variants.length);
+  }
+  const v=slot.variants[state.variants[slotId]];
+  document.getElementById('p-cur').textContent=state.current+1;
+  document.getElementById('p-tot').textContent=Math.max(9,state.current+1);
+  document.getElementById('p-fill').style.width=((state.current)/8*100)+'%';
+
+  const stage=document.getElementById('stage');
+  let body='';
+
+  if(slot.form){
+    body=renderCaptureForm(v);
+  } else if(slot.field==='textarea'){
+    body=renderTextField(slotId,v);
+  } else if(slot.multi){
+    body=renderMulti(slotId,v,slot.options);
+  } else {
+    body=renderSingle(slotId,v,slot.options);
+  }
+
+  stage.innerHTML=`<div class="question-frame">${body}</div>`;
+  attachHandlers(slotId,slot);
+}
+
+function renderSingle(slotId,v,options){
+  return `
+    <div class="q-eyebrow"><span class="dot"></span> ${v.eyebrow}</div>
+    <div class="q-text">${v.text}</div>
+    <div class="q-hint">${v.hint}</div>
+    <div class="opts">
+      ${options.map(o=>`
+        <button class="opt" data-id="${o.id}" data-score="${o.score}" data-next="${o.next}">
+          <span>${o.label}</span>
+          <span class="opt-arrow">→</span>
+        </button>`).join('')}
+    </div>
+  `;
+}
+
+function renderMulti(slotId,v,options){
+  return `
+    <div class="q-eyebrow"><span class="dot"></span> ${v.eyebrow}</div>
+    <div class="q-text">${v.text}</div>
+    <div class="q-hint">${v.hint}</div>
+    <div class="multi-hint">⚡ Múltipla escolha — selecione quantas quiser</div>
+    <div class="opts">
+      ${options.map(o=>`
+        <button class="opt multi" data-id="${o.id}" data-score="${o.score}" data-next="${o.next}">
+          <span>${o.label}</span>
+          <span class="opt-arrow">→</span>
+        </button>`).join('')}
+    </div>
+    <div class="q-foot">
+      <span></span>
+      <button class="btn btn-primary" id="multi-next" disabled>Continuar <span>→</span></button>
+    </div>
+  `;
+}
+
+function renderTextField(slotId,v){
+  const slot=QBANK[slotId];
+  return `
+    <div class="q-eyebrow"><span class="dot"></span> ${v.eyebrow}</div>
+    <div class="q-text">${v.text}</div>
+    <div class="q-hint">${v.hint}</div>
+    <div class="field">
+      <textarea id="txt-${slotId}" placeholder="Ex: vendo cursos de investimentos para empresários, ticket de R$ 4.997, faço 30 vendas/mês..." rows="5"></textarea>
+    </div>
+    <div class="q-foot">
+      <button class="btn btn-ghost" onclick="prev()">← Voltar</button>
+      <button class="btn btn-primary" id="txt-next">Continuar <span>→</span></button>
+    </div>
+  `;
+}
+
+function renderCaptureForm(v){
+  const p=prefill||{};
+  return `
+    <div class="q-eyebrow"><span class="dot"></span> ${v.eyebrow}</div>
+    <div class="q-text">${v.text}</div>
+    <div class="q-hint">${v.hint}</div>
+    <div class="field"><label>Nome completo</label><input id="f-name" placeholder="Seu nome" value="${p.name||''}"></div>
+    <div class="field"><label>Empresa</label><input id="f-biz" placeholder="Nome da empresa" value="${p.biz||''}"></div>
+    <div class="field"><label>WhatsApp (com DDD)</label><input id="f-phone" placeholder="(11) 99999-9999" inputmode="tel"></div>
+    <div class="field"><label>E-mail profissional</label><input id="f-email" type="email" placeholder="voce@empresa.com.br"></div>
+    <div class="field"><label>Instagram da empresa (opcional)</label><input id="f-ig" placeholder="@suaempresa"></div>
+    <div class="q-foot">
+      <button class="btn btn-ghost" onclick="prev()">← Voltar</button>
+      <button class="btn btn-primary" id="submit-btn">Gerar diagnóstico <span>→</span></button>
+    </div>
+  `;
+}
+
+/* ====================
+   HANDLERS
+   ==================== */
+function attachHandlers(slotId,slot){
+  if(slot.form){
+    document.getElementById('submit-btn').onclick=submitLead;
+    return;
+  }
+  if(slot.field==='textarea'){
+    document.getElementById('txt-next').onclick=()=>{
+      const val=document.getElementById('txt-'+slotId).value.trim();
+      if(val.length<10){alert('Conte com um pouco mais de detalhe — pelo menos 10 caracteres.');return;}
+      state.answers[slotId]={value:val};
+      advance(slot.next);
+    };
+    return;
+  }
+  if(slot.multi){
+    let selected=[];
+    document.querySelectorAll('.opt').forEach(btn=>{
+      btn.onclick=()=>{
+        btn.classList.toggle('selected');
+        const id=btn.dataset.id;
+        if(selected.includes(id))selected=selected.filter(x=>x!==id);
+        else selected.push(id);
+        document.getElementById('multi-next').disabled=selected.length===0;
+      };
+    });
+    document.getElementById('multi-next').onclick=()=>{
+      const opts=slot.options.filter(o=>selected.includes(o.id));
+      const score=opts.reduce((s,o)=>s+o.score,0);
+      state.answers[slotId]={ids:selected,labels:opts.map(o=>o.label),score};
+      advance(slot.options[0].next);
+    };
+    return;
+  }
+  // single choice
+  document.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const opt=slot.options.find(o=>o.id===btn.dataset.id);
+      state.answers[slotId]={id:opt.id,label:opt.label,score:opt.score};
+      btn.classList.add('selected');
+      setTimeout(()=>advance(opt.next),400);
+    };
+  });
+}
+
+function advance(nextSlot){
+  if(!nextSlot){finish();return;}
+  state.path.push(nextSlot);
+  state.current++;
+  render();
+}
+
+function prev(){
+  if(state.current===0)return;
+  const last=state.path[state.current];
+  delete state.answers[last];
+  state.path.pop();
+  state.current--;
+  render();
+}
+
+/* ====================
+   SUBMISSION + SCORE
+   ==================== */
+function submitLead(){
+  const name=document.getElementById('f-name').value.trim();
+  const biz=document.getElementById('f-biz').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const ig=document.getElementById('f-ig').value.trim();
+  if(!name||!biz||!phone||!email){alert('Preencha nome, empresa, WhatsApp e e-mail.');return;}
+  state.contact={name,biz,phone,email,ig};
+  showAnalyzing();
+}
+
+function showAnalyzing(){
+  const steps=[
+    'Cruzando suas respostas com casos similares...',
+    'Modelando seu cenário de receita projetada...',
+    'Identificando os 3 gargalos prioritários...',
+    'Gerando dossiê estratégico personalizado...',
+    'Notificando equipe da The Agência...'
+  ];
+  document.getElementById('stage').innerHTML=`
+    <div class="question-frame">
+      <div class="analyzing">
+        <div class="analyzing-spin"></div>
+        <div class="analyzing-text">Inteligência analisando seu cenário...</div>
+        <div class="analyzing-steps" id="an-steps">
+          ${steps.map((s,i)=>`<div class="an-step" data-i="${i}">${s}</div>`).join('')}
         </div>
-    </section>
+      </div>
+    </div>`;
+  let i=0;
+  const tick=setInterval(()=>{
+    const cur=document.querySelector(`.an-step[data-i="${i}"]`);
+    if(cur){
+      cur.classList.add('active');
+      if(i>0)document.querySelector(`.an-step[data-i="${i-1}"]`).classList.replace('active','done');
+    }
+    i++;
+    if(i>=steps.length){
+      clearInterval(tick);
+      setTimeout(()=>{
+        document.querySelectorAll('.an-step').forEach(s=>s.classList.add('done'));
+        setTimeout(showResult,500);
+      },800);
+    }
+  },650);
+}
 
-    <section>
-        <div class="container reveal">
-            <h2 class="sec-title">Monitoramento Global</h2>
-            <p class="sec-sub">Algoritmos trabalhando em tempo real em nossas operações ativas.</p>
-            <div class="dashboard">
-                <div class="dash-header">
-                    <h3 style="color:#aaa; font-size:1rem;">STATUS DAS CAMPANHAS</h3>
-                    <div style="color:#0f0; font-weight:bold; font-size:0.9rem;"><span class="live-dot"></span> SYNCING DATA</div>
-                </div>
-                <div class="charts-grid">
-                    <div class="chart-box">
-                        <div class="chart-title">ROAS Médio da Agência</div>
-                        <div class="chart-value" id="roas-val">4.2x</div>
-                    </div>
-                    <div class="chart-box">
-                        <div class="chart-title">Eventos de Conversão (Hoje)</div>
-                        <div class="chart-value" id="leads-val">14,204</div>
-                    </div>
-                    <div class="chart-box">
-                        <div class="chart-title">Volume Gerenciado</div>
-                        <div class="chart-value">R$ 2.4M+</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+function calcScore(){
+  let total=0;
+  Object.values(state.answers).forEach(a=>{ if(a.score)total+=a.score; });
+  return total;
+}
 
-    <section style="background: #030303; border-top: 1px solid #111; border-bottom: 1px solid #111;">
-        <div class="container reveal">
-            <h2 class="sec-title">O Padrão Elite</h2>
-            <p class="sec-sub">Marketing de esperança não funciona. Nós construímos máquinas de vendas.</p>
-            <div class="method-grid">
-                <div class="method-card">
-                    <h3>Análise de Dados (BI)</h3>
-                    <p style="color:#aaa; line-height:1.6;">Rastreamos o comportamento de compra do seu cliente ideal. Cada centavo investido no Meta Ads e Google Ads é direcionado matematicamente para reduzir seu Custo de Aquisição (CAC).</p>
-                </div>
-                <div class="method-card">
-                    <h3>UX e Design de Luxo</h3>
-                    <p style="color:#aaa; line-height:1.6;">O preço que você cobra é definido pela percepção de valor do cliente. Construímos identidades, landing pages e criativos focados em atrair e converter o público Classe A.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+function classify(score){
+  if(score>=20)return 'hot';
+  if(score>=12)return 'warm';
+  return 'cold';
+}
 
-    <section>
-        <div class="container reveal">
-            <h2 class="sec-title">Captação Cinematográfica</h2>
-            <p class="sec-sub">O criativo (vídeo) é responsável por 80% do resultado do tráfego pago hoje. Temos produtora própria com arsenal de ponta para sua marca.</p>
-            <div class="av-grid">
-                <div class="av-item">
-                    <h4>Mirrorless Fujifilm XT2</h4>
-                    <p style="color:#888; font-size:0.95rem;">Lentes de altíssima fidelidade e color grading de cinema para entregar anúncios master e institucionais com profundidade de campo impecável.</p>
-                </div>
-                <div class="av-item">
-                    <h4>iPhone 17 Pro Max</h4>
-                    <p style="color:#888; font-size:0.95rem;">Agilidade extrema para conteúdo nativo. Captação hiper-estabilizada em formato vertical, garantindo entrega máxima nos algoritmos do Reels e TikTok.</p>
-                </div>
-                <div class="av-item">
-                    <h4>Áudio Hollyland</h4>
-                    <p style="color:#888; font-size:0.95rem;">Sistemas de lapela sem fio de padrão internacional. Áudio cristalino e isolamento de ruído que prendem a atenção do lead no primeiro segundo.</p>
-                </div>
-                <div class="av-item">
-                    <h4>Iluminação Ulanzi LED</h4>
-                    <p style="color:#888; font-size:0.95rem;">Setup de iluminação profissional de estúdio. Criamos a atmosfera e a colorimetria exatas para transmitir autoridade e luxo nas suas gravações.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+function showResult(){
+  const score=calcScore();
+  const tier=classify(score);
+  const lead={
+    id:'L'+Date.now()+Math.random().toString(36).slice(2,6),
+    createdAt:new Date().toISOString(),
+    contact:state.contact,
+    answers:state.answers,
+    variants:state.variants,
+    path:state.path,
+    score,
+    tier,
+    durationSec:Math.round((Date.now()-state.startTime)/1000),
+    fingerprint:state.fingerprint
+  };
+  saveLead(lead);
 
-    <section style="background: #050505;">
-        <div class="container reveal ecosystem-wrap">
-            <h2 class="sec-title">Canais de Aquisição</h2>
-            <p class="sec-sub">Onde estiver a atenção do seu cliente comprador, nós colocaremos a sua marca.</p>
-            <div class="eco-tags">
-                <div class="eco-tag">Meta Ads (Facebook/Instagram)</div>
-                <div class="eco-tag">Google Ads Search & YouTube</div>
-                <div class="eco-tag">TikTok Ads</div>
-                <div class="eco-tag">CRM & Automação</div>
-                <div class="eco-tag">Growth Hacking</div>
-            </div>
-        </div>
-    </section>
+  const cfg={
+    hot:{
+      icon:'🔥',
+      title:'Você é prioridade alta',
+      sub:'Pelas suas respostas, seu cenário se encaixa exatamente no perfil que entregamos resultado em até 60 dias. Nossos diretores foram notificados — você terá retorno em até 24h úteis.',
+      cta:'Acelerar agendamento no WhatsApp',
+      whatsapp:'Acabei de fazer o diagnóstico estratégico e fui classificado como prioridade alta. Quero acelerar o agendamento.'
+    },
+    warm:{
+      icon:'⚡',
+      title:'Cenário promissor com ajustes',
+      sub:'Há fit estratégico, mas alguns pontos precisam de calibração antes de escalar. Nosso time vai te enviar um plano com as 3 ações que devem vir primeiro.',
+      cta:'Falar com a equipe no WhatsApp',
+      whatsapp:'Acabei de fazer o diagnóstico. Quero entender os próximos passos com a equipe.'
+    },
+    cold:{
+      icon:'📚',
+      title:'Diagnóstico recebido',
+      sub:'Pelo seu momento, o melhor para você agora é nosso material gratuito + uma análise pontual. Vamos te enviar conteúdo estratégico para os próximos 30 dias.',
+      cta:'Receber material no WhatsApp',
+      whatsapp:'Acabei de fazer o diagnóstico e quero receber o material estratégico.'
+    }
+  }[tier];
 
-    <section>
-        <div class="container reveal">
-            <h2 class="sec-title">Simulador de Performance</h2>
-            <p class="sec-sub">Preencha os dados e veja a projeção matemática de uma operação bem estruturada.</p>
-            <div class="roi-container">
-                <div>
-                    <label style="color:#aaa; font-size:0.9rem;">Orçamento Mensal (R$)</label>
-                    <input type="number" id="roi-orc" class="roi-input" value="5000" oninput="calcROI()">
-                    
-                    <label style="color:#aaa; font-size:0.9rem;">Custo por Lead/Contato (R$)</label>
-                    <input type="number" id="roi-cpl" class="roi-input" value="15" oninput="calcROI()">
-                    
-                    <label style="color:#aaa; font-size:0.9rem;">Taxa de Fechamento (%)</label>
-                    <input type="number" id="roi-taxa" class="roi-input" value="10" oninput="calcROI()">
-                    
-                    <label style="color:#aaa; font-size:0.9rem;">Ticket Médio (R$)</label>
-                    <input type="number" id="roi-ticket" class="roi-input" value="2000" oninput="calcROI()">
-                </div>
-                <div class="roi-result">
-                    <h4 style="color:#aaa; text-transform:uppercase;">Faturamento Bruto Projetado</h4>
-                    <div class="roi-profit" id="roi-total">R$ 66.666,67</div>
-                    <p style="color:#888;">Retorno de <strong style="color:var(--gold);" id="roi-mult">13.3x</strong> sobre o valor investido em mídia.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  const phone=state.contact.phone.replace(/\D/g,'');
+  const waMsg=encodeURIComponent(cfg.whatsapp);
+  // ⚠ Substitua pelo número real da agência
+  const waNumber='5511999999999';
 
-    <section style="background: #030303; border-top: 1px solid #111;">
-        <div class="container reveal">
-            <h2 class="sec-title">Nosso Rastro</h2>
-            <p class="sec-sub">Números que validam a nossa operação diária.</p>
-            <div class="cases-grid">
-                <div class="case-card">
-                    <div class="case-metric">-64%</div>
-                    <p style="color:#aaa; margin-top:10px;">Redução média no Custo de Aquisição (CAC) nos primeiros 60 dias de gestão técnica.</p>
-                </div>
-                <div class="case-card">
-                    <div class="case-metric">+3x</div>
-                    <p style="color:#aaa; margin-top:10px;">Aumento na taxa de clique (CTR) substituindo banners estáticos por Vídeos Cinematográficos.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  document.getElementById('p-fill').style.width='100%';
 
-    <footer>
-        <div class="container reveal">
-            <h2 style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px;">Qual é o próximo passo?</h2>
-            <p style="color:#aaa; margin-bottom: 40px;">Passe pela nossa esteira de qualificação. Em menos de 1 minuto, a inteligência artificial vai gerar um dossiê do seu cenário para nossos diretores.</p>
-            <a href="quiz.html" class="btn-glow">Iniciar Diagnóstico Elite</a>
-            <p style="color:#555; margin-top: 80px; font-size:0.9rem;">&copy; 2026 Agência Elite. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+  document.getElementById('stage').innerHTML=`
+    <div class="question-frame tier-${tier}">
+      <div class="result-icon">${cfg.icon}</div>
+      <div class="score-card">
+        <div class="score-tier">CLASSIFICAÇÃO · ${tier.toUpperCase()}</div>
+        <div class="score-value">${score} pts</div>
+      </div>
+      <h2 class="result-title">${cfg.title}</h2>
+      <p class="result-sub">${cfg.sub}</p>
+      <div class="cta-row">
+        <a href="https://wa.me/${waNumber}?text=${waMsg}" target="_blank" class="btn btn-primary btn-block">${cfg.cta} →</a>
+        <a href="index.html" class="btn btn-ghost btn-block">Voltar ao início</a>
+      </div>
+      <p style="text-align:center;color:#555;font-size:.75rem;margin-top:24px;letter-spacing:1px">DOSSIÊ #${lead.id} · ${new Date().toLocaleDateString('pt-BR')}</p>
+    </div>`;
 
-    <script>
-        // Animação Reveal
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
-        }, { threshold: 0.15 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  // optional webhook
+  if(WEBHOOK_URL){
+    fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lead)}).catch(()=>{});
+  }
 
-        // Dashboard Live
-        setInterval(() => {
-            let roas = (4 + Math.random() * 0.8).toFixed(1);
-            document.getElementById('roas-val').innerText = roas + 'x';
-            let leadsStr = document.getElementById('leads-val').innerText.replace(',', '');
-            let leads = parseInt(leadsStr) + Math.floor(Math.random() * 3);
-            document.getElementById('leads-val').innerText = leads.toLocaleString('en-US');
-        }, 3000);
+  sessionStorage.removeItem('lead_prefill');
+}
 
-        // Calculadora Interativa
-        function calcROI() {
-            const orc = parseFloat(document.getElementById('roi-orc').value) || 0;
-            const cpl = parseFloat(document.getElementById('roi-cpl').value) || 1;
-            const taxa = (parseFloat(document.getElementById('roi-taxa').value) || 0) / 100;
-            const ticket = parseFloat(document.getElementById('roi-ticket').value) || 0;
+function saveLead(lead){
+  const arr=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  arr.unshift(lead);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(arr));
+}
 
-            const vendas = (orc / cpl) * taxa;
-            const fat = vendas * ticket;
-            const mult = orc > 0 ? (fat / orc).toFixed(1) : 0;
+/* ====================
+   BG CANVAS
+   ==================== */
+const c=document.getElementById('bg'),cx=c.getContext('2d');
+let W,H,parts=[];
+function rsz(){W=c.width=innerWidth;H=c.height=innerHeight}
+rsz();addEventListener('resize',rsz);
+for(let i=0;i<Math.min(60,innerWidth/22);i++){
+  parts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.4+.4});
+}
+function anim(){
+  cx.fillStyle='rgba(5,5,5,.18)';cx.fillRect(0,0,W,H);
+  parts.forEach((p,i)=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+    cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle='rgba(201,162,75,.5)';cx.fill();
+    for(let j=i+1;j<parts.length;j++){
+      const p2=parts[j],dx=p.x-p2.x,dy=p.y-p2.y,d=Math.hypot(dx,dy);
+      if(d<120){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p2.x,p2.y);cx.strokeStyle=`rgba(201,162,75,${.15*(1-d/120)})`;cx.lineWidth=.5;cx.stroke();}
+    }
+  });
+  requestAnimationFrame(anim);
+}
+anim();
 
-            document.getElementById('roi-total').innerText = fat.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('roi-mult').innerText = mult + 'x';
-        }
-        calcROI(); // Inicia com o valor padrão
-    </script>
+startQuiz();
+</script>
 </body>
 </html>
