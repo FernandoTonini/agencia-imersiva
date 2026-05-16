@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM · The Agência</title>
+<style>
+:root{
+  --bg:#050505;
+  --bg2:#0a0a0a;
+  --gold:#C9A24B;
+  --gold-soft:#E9C977;
+  --gold-grad:linear-gradient(135deg,#9C6F2B,#E9C977,#FCEFB3,#C9A24B);
+  --border:rgba(255,255,255,.08);
+  --hot:#ff6b6b;
+  --warm:#ffd700;
+  --cold:#7CF5FF;
+  --text:#fff;
+  --muted:#888;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display',-apple-system,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font:inherit}
+a{color:inherit;text-decoration:none}
+
+body::before{
+  content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px;z-index:-1;
+}
+
+/* LOGIN */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{max-width:420px;width:100%;background:linear-gradient(160deg,rgba(20,20,20,.7),rgba(5,5,5,.7));border:1px solid var(--border);border-radius:24px;padding:50px 40px;backdrop-filter:blur(20px);text-align:center}
+.login-box .brand-big{font-size:2rem;font-weight:900;margin-bottom:8px;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-1px}
+.login-box .sub{color:#888;font-size:.8rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:36px}
+.login-box input{width:100%;background:#000;border:1px solid #222;color:#fff;padding:16px 18px;border-radius:12px;font-size:1rem;outline:none;margin-bottom:14px;transition:.3s}
+.login-box input:focus{border-color:var(--gold)}
+.login-box button{width:100%;background:var(--gold-grad);color:#000;padding:16px;border-radius:12px;font-weight:800;font-size:.95rem;letter-spacing:1px;text-transform:uppercase;transition:.3s}
+.login-box button:hover{transform:translateY(-2px);box-shadow:0 15px 40px -10px rgba(201,162,75,.5)}
+.login-hint{margin-top:24px;color:#444;font-size:.75rem;line-height:1.6}
+
+/* APP */
+.app{display:none}
+.app.active{display:block}
+header.crm-head{padding:18px 28px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:rgba(5,5,5,.7);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.05rem}
+.brand-mark{width:28px;height:28px;background:var(--gold-grad);border-radius:7px;position:relative}
+.brand-mark::after{content:'A';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:1rem}
+.brand .crm{color:#888;font-weight:500;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;margin-left:8px;border-left:1px solid var(--border);padding-left:14px}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:10px 18px;border-radius:50px;font-weight:600;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;transition:.3s;display:inline-flex;align-items:center;gap:8px;border:1px solid transparent}
+.btn-ghost{border-color:var(--border);color:#bbb}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
+.btn-danger{border-color:rgba(255,107,107,.3);color:#ff6b6b}
+.btn-danger:hover{background:rgba(255,107,107,.1)}
+.btn-primary{background:var(--gold-grad);color:#000}
+.btn-primary:hover{transform:translateY(-1px)}
+
+main{max-width:1400px;margin:0 auto;padding:28px}
+h1.title{font-size:1.7rem;letter-spacing:-1px;margin-bottom:6px}
+.subtitle{color:#888;font-size:.9rem;margin-bottom:30px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:30px}
+.stat-card{background:linear-gradient(160deg,rgba(20,20,20,.6),rgba(5,5,5,.6));border:1px solid var(--border);border-radius:16px;padding:22px}
+.stat-card .lab{color:#666;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.stat-card .val{font-size:2.2rem;font-weight:900;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}
+.stat-card.hot{border-left:3px solid var(--hot)}
+.stat-card.hot .val{color:var(--hot)}
+.stat-card.warm{border-left:3px solid var(--warm)}
+.stat-card.warm .val{color:var(--warm)}
+.stat-card.cold{border-left:3px solid var(--cold)}
+.stat-card.cold .val{color:var(--cold)}
+
+/* FILTERS */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+.search-input{flex:1;min-width:240px;background:#0a0a0a;border:1px solid var(--border);color:#fff;padding:12px 18px;border-radius:50px;outline:none;font-size:.92rem;transition:.3s}
+.search-input:focus{border-color:var(--gold)}
+.chip{padding:9px 18px;border-radius:50px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:#aaa;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;transition:.2s;cursor:pointer}
+.chip:hover{color:#fff;border-color:var(--gold)}
+.chip.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}
+.chip.hot.active{background:var(--hot);border-color:var(--hot);color:#fff}
+.chip.warm.active{background:var(--warm);border-color:var(--warm);color:#000}
+.chip.cold.active{background:var(--cold);border-color:var(--cold);color:#000}
+
+/* TABLE */
+.table-wrap{background:rgba(10,10,10,.5);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{text-align:left;padding:16px 18px;background:rgba(0,0,0,.5);color:#888;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--border)}
+td{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.04);color:#ddd}
+tr{transition:.2s;cursor:pointer}
+tr:hover td{background:rgba(201,162,75,.04)}
+.tier-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:30px;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+.tier-badge.hot{background:rgba(255,107,107,.15);color:var(--hot);border:1px solid rgba(255,107,107,.3)}
+.tier-badge.warm{background:rgba(255,215,0,.15);color:var(--warm);border:1px solid rgba(255,215,0,.3)}
+.tier-badge.cold{background:rgba(124,245,255,.15);color:var(--cold);border:1px solid rgba(124,245,255,.3)}
+.tier-badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.empty{padding:80px 30px;text-align:center;color:#666}
+.empty .ico{font-size:3rem;margin-bottom:14px;opacity:.5}
+
+/* DRAWER (lead detail) */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,95vw);background:#080808;border-left:1px solid var(--border);z-index:99;transform:translateX(100%);transition:transform .4s cubic-bezier(.2,.7,.2,1);overflow-y:auto;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+.drawer.open{transform:translateX(0)}
+.drawer-head{padding:24px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#080808;z-index:2}
+.drawer-body{padding:28px}
+.drawer h3{font-size:1.4rem;letter-spacing:-.5px;margin-bottom:4px}
+.close-x{font-size:1.5rem;color:#888;background:rgba(255,255,255,.04);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.2s}
+.close-x:hover{color:#fff;background:rgba(255,107,107,.2)}
+.drw-section{margin-bottom:28px}
+.drw-label{color:#666;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:8px}
+.drw-label::before{content:'';width:3px;height:14px;background:var(--gold)}
+.drw-info{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.drw-info .item{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:14px}
+.drw-info .k{color:#666;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.drw-info .v{color:#fff;font-size:.95rem;font-weight:500;word-break:break-word}
+.drw-info .v a{color:var(--gold-soft);text-decoration:none}
+.drw-info .v a:hover{text-decoration:underline}
+.q-list{display:flex;flex-direction:column;gap:10px}
+.q-row{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.q-row .q{color:#888;font-size:.78rem;margin-bottom:4px}
+.q-row .a{color:#fff;font-size:.95rem;font-weight:500}
+.q-row .a.multi{display:flex;flex-wrap:wrap;gap:6px}
+.q-row .a.multi span{background:rgba(201,162,75,.1);border:1px solid rgba(201,162,75,.3);padding:3px 10px;border-radius:30px;font-size:.78rem;color:var(--gold-soft)}
+
+.strategy-box{background:linear-gradient(160deg,rgba(201,162,75,.08),rgba(0,0,0,.4));border:1px solid rgba(201,162,75,.3);border-radius:14px;padding:22px}
+.strategy-box h4{color:var(--gold-soft);font-size:1rem;margin-bottom:14px}
+.strategy-box ul{list-style:none;padding:0}
+.strategy-box li{padding:8px 0 8px 22px;position:relative;color:#ddd;font-size:.92rem;line-height:1.5}
+.strategy-box li::before{content:'▶';position:absolute;left:0;color:var(--gold);font-size:.7rem;top:11px}
+
+.drw-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.action-btn{padding:14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.85rem;font-weight:600;color:#fff;transition:.3s;text-align:center}
+.action-btn:hover{border-color:var(--gold);color:var(--gold-soft);transform:translateY(-2px)}
+.action-btn.primary{background:var(--gold-grad);color:#000;border-color:transparent}
+.action-btn.wa{background:#25D366;color:#fff;border-color:transparent}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:98;opacity:0;visibility:hidden;transition:.3s}
+.overlay.show{opacity:1;visibility:visible}
+
+@media(max-width:780px){
+  main{padding:18px}
+  table{font-size:.82rem}
+  th,td{padding:12px 10px}
+  .hide-mobile{display:none}
+  .drw-info{grid-template-columns:1fr}
+  .drw-actions{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login">
+  <div class="login-box">
+    <div class="brand-big">The Agência</div>
+    <div class="sub">CRM · Acesso interno</div>
+    <input type="password" id="pwd" placeholder="Senha de acesso">
+    <button onclick="login()">Entrar</button>
+    <p class="login-hint">🔒 Acesso restrito. Para configurar a senha, edite a constante <code>CRM_PASSWORD</code> no arquivo crm.html.</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <header class="crm-head">
+    <div class="brand"><span class="brand-mark"></span>The Agência<span class="crm">CRM</span></div>
+    <div class="head-actions">
+      <button class="btn btn-ghost" onclick="exportCSV()">⬇ Exportar CSV</button>
+      <button class="btn btn-ghost" onclick="refresh()">↻ Atualizar</button>
+      <button class="btn btn-danger" onclick="clearAll()">🗑 Limpar</button>
+      <button class="btn btn-ghost" onclick="logout()">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="title">Painel de leads</h1>
+    <p class="subtitle">Todos os leads que passaram pelo diagnóstico estratégico — classificados automaticamente.</p>
+
+    <div class="stats">
+      <div class="stat-card"><div class="lab">📊 Total geral</div><div class="val" id="s-total">0</div></div>
+      <div class="stat-card hot"><div class="lab">🔥 Quentes</div><div class="val" id="s-hot">0</div></div>
+      <div class="stat-card warm"><div class="lab">⚡ Mornos</div><div class="val" id="s-warm">0</div></div>
+      <div class="stat-card cold"><div class="lab">❄ Frios</div><div class="val" id="s-cold">0</div></div>
+      <div class="stat-card"><div class="lab">📅 Últimos 7 dias</div><div class="val" id="s-week">0</div></div>
+    </div>
+
+    <div class="filters">
+      <input class="search-input" id="search" placeholder="🔍 Buscar por nome, empresa, email...">
+      <button class="chip active" data-filter="all">Todos</button>
+      <button class="chip hot" data-filter="hot">🔥 Quentes</button>
+      <button class="chip warm" data-filter="warm">⚡ Mornos</button>
+      <button class="chip cold" data-filter="cold">❄ Frios</button>
+    </div>
+
+    <div class="table-wrap">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th>Lead</th>
+            <th class="hide-mobile">Empresa</th>
+            <th>Tier</th>
+            <th class="hide-mobile">Score</th>
+            <th class="hide-mobile">Quando</th>
+            <th>Contato</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty" style="display:none">
+        <div class="ico">📭</div>
+        <h3>Nenhum lead ainda</h3>
+        <p style="margin-top:10px">Quando alguém completar o quiz, vai aparecer aqui automaticamente.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- DRAWER -->
+<div class="overlay" id="ovl" onclick="closeDrawer()"></div>
+<div class="drawer" id="drw">
+  <div class="drawer-head">
+    <div>
+      <h3 id="d-name">—</h3>
+      <p style="color:#888;font-size:.85rem" id="d-when">—</p>
+    </div>
+    <button class="close-x" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="d-body"></div>
+</div>
+
+<script>
+/* =====================================
+   CONFIG
+   ===================================== */
+const CRM_PASSWORD='theagencia2026';  // ⚠ ALTERE para sua senha
+const STORAGE_KEY='theagencia_leads';
+const SESSION_KEY='crm_auth';
+
+/* mesma estrutura do quiz */
+const SLOT_LABELS={
+  stage:'Estágio do negócio',
+  why_now:'Motivação atual',
+  bottleneck_early:'Principal gargalo',
+  bottleneck_grow:'Onde está o teto',
+  bottleneck_scale:'Desafio de escala',
+  mkt_history:'Maturidade com marketing pago',
+  budget:'Orçamento mensal disponível',
+  urgency:'Janela de decisão',
+  decision:'Poder de decisão',
+  priorities:'Prioridades de entrega',
+  context:'Contexto do negócio',
+  capture:'Contato'
+};
+
+/* =====================================
+   AUTH
+   ===================================== */
+if(sessionStorage.getItem(SESSION_KEY)==='ok'){
+  showApp();
+}
+
+function login(){
+  const v=document.getElementById('pwd').value;
+  if(v===CRM_PASSWORD){
+    sessionStorage.setItem(SESSION_KEY,'ok');
+    showApp();
+  } else {
+    alert('Senha incorreta');
+  }
+}
+document.getElementById('pwd').addEventListener('keypress',e=>{if(e.key==='Enter')login()});
+
+function logout(){
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
+
+function showApp(){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').classList.add('active');
+  refresh();
+}
+
+/* =====================================
+   DATA
+   ===================================== */
+let allLeads=[];
+let currentFilter='all';
+let currentSearch='';
+
+function refresh(){
+  allLeads=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  renderStats();
+  renderRows();
+}
+
+function renderStats(){
+  const total=allLeads.length;
+  const hot=allLeads.filter(l=>l.tier==='hot').length;
+  const warm=allLeads.filter(l=>l.tier==='warm').length;
+  const cold=allLeads.filter(l=>l.tier==='cold').length;
+  const weekAgo=Date.now()-7*864e5;
+  const week=allLeads.filter(l=>new Date(l.createdAt).getTime()>weekAgo).length;
+  document.getElementById('s-total').textContent=total;
+  document.getElementById('s-hot').textContent=hot;
+  document.getElementById('s-warm').textContent=warm;
+  document.getElementById('s-cold').textContent=cold;
+  document.getElementById('s-week').textContent=week;
+}
+
+function renderRows(){
+  const tbody=document.getElementById('rows');
+  let filtered=allLeads;
+  if(currentFilter!=='all')filtered=filtered.filter(l=>l.tier===currentFilter);
+  if(currentSearch){
+    const q=currentSearch.toLowerCase();
+    filtered=filtered.filter(l=>{
+      const c=l.contact||{};
+      return [c.name,c.biz,c.email,c.phone,c.ig].some(v=>v&&v.toLowerCase().includes(q));
+    });
+  }
+  if(filtered.length===0){
+    tbody.innerHTML='';
+    document.getElementById('empty').style.display='block';
+    return;
+  }
+  document.getElementById('empty').style.display='none';
+  tbody.innerHTML=filtered.map(l=>{
+    const c=l.contact||{};
+    const when=relTime(l.createdAt);
+    return `<tr onclick="openLead('${l.id}')">
+      <td><strong>${esc(c.name||'—')}</strong><br><span style="color:#666;font-size:.78rem">${esc(c.email||'')}</span></td>
+      <td class="hide-mobile">${esc(c.biz||'—')}</td>
+      <td><span class="tier-badge ${l.tier}"><span class="dot"></span>${l.tier}</span></td>
+      <td class="hide-mobile" style="font-weight:700">${l.score}</td>
+      <td class="hide-mobile" style="color:#888;font-size:.85rem">${when}</td>
+      <td><a href="https://wa.me/${(c.phone||'').replace(/\D/g,'')}" target="_blank" onclick="event.stopPropagation()" style="color:#25D366">${esc(c.phone||'—')}</a></td>
+    </tr>`;
+  }).join('');
+}
+
+function relTime(iso){
+  const d=new Date(iso),now=Date.now(),diff=(now-d.getTime())/1000;
+  if(diff<60)return 'agora';
+  if(diff<3600)return Math.floor(diff/60)+'m atrás';
+  if(diff<86400)return Math.floor(diff/3600)+'h atrás';
+  if(diff<604800)return Math.floor(diff/86400)+'d atrás';
+  return d.toLocaleDateString('pt-BR');
+}
+
+function esc(s){return String(s||'').replace(/[<>"']/g,m=>({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+/* filters */
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');
+  currentFilter=c.dataset.filter;
+  renderRows();
+}));
+document.getElementById('search').addEventListener('input',e=>{
+  currentSearch=e.target.value.trim();
+  renderRows();
+});
+
+/* =====================================
+   DRAWER (lead detail)
+   ===================================== */
+function openLead(id){
+  const lead=allLeads.find(l=>l.id===id);
+  if(!lead)return;
+  const c=lead.contact||{};
+  document.getElementById('d-name').textContent=c.name||'—';
+  document.getElementById('d-when').textContent=`${relTime(lead.createdAt)} · ${new Date(lead.createdAt).toLocaleString('pt-BR')} · #${lead.id}`;
+
+  const phone=(c.phone||'').replace(/\D/g,'');
+  const waMsg=encodeURIComponent(`Olá ${c.name?c.name.split(' ')[0]:''}, sou da The Agência. Recebi seu diagnóstico e gostaria de conversar sobre os próximos passos para a ${c.biz||'sua empresa'}.`);
+
+  const html=`
+    <div class="drw-section">
+      <div class="drw-label">Classificação</div>
+      <div style="display:flex;align-items:center;gap:14px;margin-top:6px">
+        <span class="tier-badge ${lead.tier}"><span class="dot"></span>${lead.tier.toUpperCase()}</span>
+        <span style="font-size:1.8rem;font-weight:900;letter-spacing:-1px">${lead.score} pts</span>
+        <span style="color:#666;font-size:.8rem">Quiz: ${lead.durationSec||'?'}s</span>
+      </div>
+    </div>
+
+    <div class="drw-section">
+      <div class="drw-label">Contato</div>
+      <div class="drw-info">
+        <div class="item"><div class="k">Nome</div><div class="v">${esc(c.name||'—')}</div></div>
+        <div class="item"><div class="k">Empresa</div><div class="v">${esc(c.biz||'—')}</div></div>
+        <div class="item"><div class="k">WhatsApp</div><div class="v"><a href="https://wa.me/${phone}?text=${waMsg}" target="_blank">${esc(c.phone||'—')}</a></div></div>
+        <div class="item"><div class="k">E-mail</div><div class="v"><a href="mailto:${esc(c.email||'')}">${esc(c.email||'—')}</a></div></div>
+        <div class="item" style="grid-column:1/-1"><div class="k">Instagram</div><div class="v">${c.ig?`<a href="https://instagram.com/${c.ig.replace('@','')}" target="_blank">${esc(c.ig)}</a>`:'—'}</div></div>
+      </div>
+    </div>
+
+    <div class="drw-section">
+      <div class="drw-label">Respostas do diagnóstico</div>
+      <div class="q-list">
+        ${renderAnswers(lead)}
+      </div>
+    </div>
+
+    <div class="drw-section">
+      <div class="drw-label">🎯 Estratégia sugerida pela IA</div>
+      <div class="strategy-box">
+        <h4>Plano de ação inicial</h4>
+        <ul>
+          ${strategyFor(lead).map(s=>`<li>${s}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <div class="drw-section">
+      <div class="drw-label">Ações rápidas</div>
+      <div class="drw-actions">
+        <a class="action-btn wa" href="https://wa.me/${phone}?text=${waMsg}" target="_blank">💬 Abrir WhatsApp</a>
+        <a class="action-btn" href="mailto:${esc(c.email||'')}">✉ Enviar e-mail</a>
+        <button class="action-btn" onclick="copyBriefing('${lead.id}')">📋 Copiar briefing</button>
+        <button class="action-btn" onclick="deleteLead('${lead.id}')" style="color:#ff6b6b">🗑 Excluir lead</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('d-body').innerHTML=html;
+  document.getElementById('drw').classList.add('open');
+  document.getElementById('ovl').classList.add('show');
+}
+
+function renderAnswers(lead){
+  return Object.entries(lead.answers||{}).map(([slot,ans])=>{
+    const label=SLOT_LABELS[slot]||slot;
+    let val='';
+    if(ans.value)val=esc(ans.value);
+    else if(ans.labels)val=`<div class="a multi">${ans.labels.map(l=>`<span>${esc(l)}</span>`).join('')}</div>`;
+    else if(ans.label)val=esc(ans.label);
+    if(ans.labels)return `<div class="q-row"><div class="q">${label}</div>${val}</div>`;
+    return `<div class="q-row"><div class="q">${label}</div><div class="a">${val}</div></div>`;
+  }).join('');
+}
+
+/* =====================================
+   AI STRATEGY (heuristic)
+   ===================================== */
+function strategyFor(lead){
+  const a=lead.answers||{};
+  const sug=[];
+
+  // Por estágio
+  if(a.stage){
+    const s=a.stage.id;
+    if(s==='idea')sug.push('Estágio ideia: focar primeiro em validação de oferta. NÃO escalar mídia antes de provar 10 vendas manuais.');
+    if(s==='early')sug.push('Estágio early: estruturar 1 funil principal (anúncio → LP → WhatsApp) antes de diversificar canais.');
+    if(s==='growing')sug.push('Faturamento consistente: hora de profissionalizar tracking server-side e calibrar CAC por canal.');
+    if(s==='scaling')sug.push('Operação madura: foco em LTV, retenção e diversificação de canais. War room mensal recomendado.');
+  }
+
+  // Por gargalo
+  ['bottleneck_early','bottleneck_grow','bottleneck_scale'].forEach(k=>{
+    if(a[k]){
+      const id=a[k].id;
+      const map={
+        no_lead:'Gargalo de awareness: prioridade absoluta em criativos de topo de funil + Meta/TikTok.',
+        no_conv:'Gargalo de conversão: revisar oferta, copy da LP e qualificação no WhatsApp antes de investir mais.',
+        cheap:'Ticket baixo: reposicionamento + branding + upsell estruturado. Pricing é estratégia, não acaso.',
+        no_brand:'Marca fraca: branding cinematográfico + content social para construir autoridade antes de escalar mídia.',
+        cac:'CAC alto: auditoria de campanhas + criativos novos + segmentação refinada via CAPI.',
+        conv_rate:'Conversão baixa: rever página, qualificação de leads e treinamento do time comercial.',
+        sales_team:'Comercial sobrecarregado: estruturar CRM + automações + SDR antes de aumentar verba.',
+        creative:'Saturação criativa: produção semanal de criativos + testes A/B sistemáticos.',
+        ltv:'LTV: estratégia de recompra, programa de fidelidade e upsell. Otimização de pós-venda.',
+        omni:'Diversificação: testar TikTok Ads, YouTube e SEO em paralelo para reduzir dependência de Meta.',
+        brand:'Rebranding estratégico para alinhar marca ao novo nível de operação.',
+        expand:'Plano de expansão: validação por região/persona + estrutura comercial regional.'
+      };
+      if(map[id])sug.push(map[id]);
+    }
+  });
+
+  // Por orçamento
+  if(a.budget){
+    const b=a.budget.id;
+    if(b==='under_3k')sug.push('Orçamento limitado: foco em 1 canal único (Meta) + consultoria pontual. Sem dispersão.');
+    if(b==='3_10k')sug.push('Orçamento intermediário: 70% Meta + 30% Google Search. Criativos quinzenais.');
+    if(b==='10_30k')sug.push('Orçamento robusto: multicanal estruturado + produção mensal de vídeo + war room semanal.');
+    if(b==='30k_plus')sug.push('Orçamento premium: operação full-stack — performance + audiovisual + branding + CRM dedicado.');
+  }
+
+  // Por urgência
+  if(a.urgency){
+    const u=a.urgency.id;
+    if(u==='asap')sug.push('🚨 URGÊNCIA MÁXIMA: agendar diagnóstico ao vivo nas próximas 24h. Preparar plano de 30 dias.');
+    if(u==='30d')sug.push('Janela curta: priorizar agendamento essa semana. Cliente decidido.');
+    if(u==='exploring')sug.push('Sem urgência: nutrição via conteúdo. Encaminhar para newsletter + content estratégico.');
+  }
+
+  // Por decisão
+  if(a.decision){
+    const d=a.decision.id;
+    if(d==='owner')sug.push('Dono decide: conversa direta, mostrar números e ROI projetado. Sem rodeios.');
+    if(d==='partner')sug.push('Sócios: preparar material pronto para apresentação interna. Reduzir atrito.');
+    if(d==='other')sug.push('Não é decisor: validar fit antes de investir tempo. Solicitar contato do real decisor.');
+  }
+
+  // Por prioridades
+  if(a.priorities&&a.priorities.ids){
+    const p=a.priorities.ids;
+    if(p.length>=4)sug.push('Cliente quer escopo amplo: proposta full-stack faz sentido. Preparar plano integrado.');
+    if(p.includes('strategy'))sug.push('Pediu consultoria estratégica: começar com diagnóstico executivo de 7 dias.');
+    if(p.includes('video'))sug.push('Pediu audiovisual: agendar visita do diretor de produção para alinhar identidade visual.');
+  }
+
+  return sug;
+}
+
+/* =====================================
+   ACTIONS
+   ===================================== */
+function closeDrawer(){
+  document.getElementById('drw').classList.remove('open');
+  document.getElementById('ovl').classList.remove('show');
+}
+
+function deleteLead(id){
+  if(!confirm('Excluir este lead permanentemente?'))return;
+  allLeads=allLeads.filter(l=>l.id!==id);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(allLeads));
+  closeDrawer();
+  refresh();
+}
+
+function copyBriefing(id){
+  const l=allLeads.find(x=>x.id===id);if(!l)return;
+  const c=l.contact||{};
+  const ans=Object.entries(l.answers||{}).map(([k,v])=>{
+    const lab=SLOT_LABELS[k]||k;
+    const val=v.value||(v.labels?v.labels.join(', '):v.label)||'—';
+    return `• ${lab}: ${val}`;
+  }).join('\n');
+  const strategy=strategyFor(l).map(s=>'• '+s).join('\n');
+  const txt=`📋 BRIEFING — ${c.name} (${c.biz})
+TIER: ${l.tier.toUpperCase()} · SCORE: ${l.score}
+WhatsApp: ${c.phone}  |  E-mail: ${c.email}  |  IG: ${c.ig||'—'}
+
+═══ RESPOSTAS ═══
+${ans}
+
+═══ ESTRATÉGIA SUGERIDA ═══
+${strategy}
+
+— Gerado em ${new Date(l.createdAt).toLocaleString('pt-BR')}`;
+  navigator.clipboard.writeText(txt).then(()=>alert('Briefing copiado!'));
+}
+
+function exportCSV(){
+  if(allLeads.length===0){alert('Sem leads para exportar');return;}
+  const rows=[['ID','Data','Tier','Score','Nome','Empresa','WhatsApp','Email','Instagram','Respostas']];
+  allLeads.forEach(l=>{
+    const c=l.contact||{};
+    const ans=Object.entries(l.answers||{}).map(([k,v])=>{
+      const val=v.value||(v.labels?v.labels.join('|'):v.label)||'';
+      return `${k}=${val}`;
+    }).join(' || ');
+    rows.push([l.id,l.createdAt,l.tier,l.score,c.name||'',c.biz||'',c.phone||'',c.email||'',c.ig||'',ans]);
+  });
+  const csv=rows.map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`theagencia-leads-${new Date().toISOString().slice(0,10)}.csv`;a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearAll(){
+  if(!confirm('Apagar TODOS os leads? Esta ação não pode ser desfeita.'))return;
+  if(!confirm('Tem certeza absoluta?'))return;
+  localStorage.removeItem(STORAGE_KEY);
+  refresh();
+}
+
+/* Atualiza automaticamente quando outra aba modificar (caso o quiz seja aberto em paralelo) */
+addEventListener('storage',e=>{if(e.key===STORAGE_KEY)refresh()});
+</script>
+</body>
+</html>
