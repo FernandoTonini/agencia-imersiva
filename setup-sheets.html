@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Configurar Google Sheets · The Agência</title>
+<style>
+:root{
+  --bg:#050505;
+  --gold:#C9A24B;
+  --gold-soft:#E9C977;
+  --gold-grad:linear-gradient(135deg,#9C6F2B,#E9C977,#FCEFB3,#C9A24B,#7A4E16);
+  --green:#22ff88;
+  --border:rgba(255,255,255,.08);
+  --text:#fff;
+  --muted:#888;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter','SF Pro Display',-apple-system,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none}
+input,textarea{font:inherit}
+
+body::before{
+  content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px;z-index:-1;
+  mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%);
+}
+body::after{
+  content:'';position:fixed;top:-20%;right:-20%;width:60%;height:60%;background:radial-gradient(circle,rgba(201,162,75,.1),transparent 60%);filter:blur(60px);z-index:-1;
+}
+
+header{padding:18px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);background:rgba(5,5,5,.7);backdrop-filter:blur(20px);position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900}
+.brand-mark{width:28px;height:28px;background:var(--gold-grad);border-radius:7px;position:relative}
+.brand-mark::after{content:'A';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:1rem}
+.brand span{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.exit{color:#888;font-size:.85rem;transition:.2s}
+.exit:hover{color:var(--gold-soft)}
+
+main{max-width:720px;margin:0 auto;padding:30px 20px 80px}
+
+.hero-block{text-align:center;margin-bottom:30px;animation:fade .6s ease}
+@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid var(--border);border-radius:50px;font-size:.7rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-soft);margin-bottom:18px}
+.eyebrow .dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:blink 1.5s infinite}
+@keyframes blink{50%{opacity:.3}}
+h1{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:12px}
+.gold{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{color:#aaa;font-size:1rem;line-height:1.55;max-width:520px;margin:0 auto}
+
+/* PROGRESS */
+.progress-wrap{display:flex;align-items:center;justify-content:space-between;margin:30px 0 40px;padding:0 4px;gap:6px}
+.pstep{flex:1;display:flex;align-items:center;gap:8px}
+.pstep .dot{width:32px;height:32px;border-radius:50%;background:#0a0a0a;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#666;transition:.4s;flex-shrink:0}
+.pstep.active .dot{background:var(--gold-grad);border-color:transparent;color:#000;box-shadow:0 0 20px rgba(201,162,75,.4)}
+.pstep.done .dot{background:var(--green);border-color:var(--green);color:#000}
+.pstep .bar{flex:1;height:2px;background:#1a1a1a;border-radius:10px;overflow:hidden}
+.pstep.done .bar{background:var(--green)}
+.pstep:last-child .bar{display:none}
+
+/* STEP CARD */
+.step-card{background:linear-gradient(160deg,rgba(20,20,20,.6),rgba(5,5,5,.6));border:1px solid var(--border);border-radius:20px;padding:32px 24px;margin-bottom:20px;animation:slideIn .5s cubic-bezier(.2,.7,.2,1)}
+@keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.step-num{display:inline-block;padding:4px 12px;background:rgba(201,162,75,.12);color:var(--gold-soft);border-radius:30px;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:14px}
+.step-title{font-size:1.4rem;font-weight:800;letter-spacing:-.8px;line-height:1.2;margin-bottom:10px}
+.step-desc{color:#aaa;font-size:.95rem;line-height:1.6;margin-bottom:24px}
+
+.instr{background:rgba(0,0,0,.4);border-left:3px solid var(--gold);border-radius:8px;padding:14px 18px;margin:18px 0;color:#ddd;font-size:.92rem;line-height:1.6}
+.instr strong{color:var(--gold-soft)}
+.instr ol{margin:8px 0 0 16px}
+.instr ol li{margin:5px 0}
+.instr code{background:rgba(201,162,75,.12);color:var(--gold-soft);padding:2px 8px;border-radius:4px;font-size:.88rem;font-family:'SF Mono',Menlo,monospace}
+
+/* COPY BLOCKS */
+.copy-block{position:relative;background:#000;border:1px solid var(--border);border-radius:12px;padding:18px;margin:14px 0;font-family:'SF Mono','Menlo','Monaco','Consolas',monospace;font-size:.78rem;color:#ddd;line-height:1.55;white-space:pre-wrap;word-break:break-word;max-height:280px;overflow-y:auto}
+.copy-block::-webkit-scrollbar{width:6px}
+.copy-block::-webkit-scrollbar-track{background:#0a0a0a}
+.copy-block::-webkit-scrollbar-thumb{background:#333;border-radius:10px}
+.copy-btn{position:sticky;top:0;display:block;margin-left:auto;background:var(--gold-grad);color:#000;padding:8px 18px;border-radius:30px;font-weight:700;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;transition:.2s;box-shadow:0 4px 16px rgba(201,162,75,.3);float:right;margin-bottom:8px}
+.copy-btn:hover{transform:scale(1.05)}
+.copy-btn.copied{background:var(--green);color:#000}
+
+/* BTN */
+.btn-row{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.btn{padding:14px 24px;border-radius:50px;font-weight:700;font-size:.88rem;letter-spacing:1px;text-transform:uppercase;transition:.3s;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn-primary{background:var(--gold-grad);color:#000;box-shadow:0 10px 30px -5px rgba(201,162,75,.4);flex:1;min-width:200px}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px -5px rgba(201,162,75,.6)}
+.btn-ghost{background:transparent;color:#888;border:1px solid var(--border)}
+.btn-ghost:hover{color:#fff;border-color:var(--gold)}
+.btn-link{background:#1a1a1a;color:#fff;border:1px solid var(--border);width:100%;justify-content:center}
+.btn-link:hover{border-color:var(--gold);color:var(--gold-soft)}
+
+/* INPUT */
+.input-field{width:100%;background:#000;border:1.5px solid var(--border);color:#fff;padding:16px 18px;border-radius:12px;font-size:.92rem;outline:none;transition:.3s;margin:14px 0;font-family:'SF Mono',monospace}
+.input-field:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,162,75,.1)}
+
+/* SUCCESS */
+.success-box{background:linear-gradient(160deg,rgba(34,255,136,.08),rgba(0,0,0,.4));border:1px solid rgba(34,255,136,.4);border-radius:14px;padding:24px;margin-top:24px;text-align:center;display:none}
+.success-box.show{display:block;animation:fade .5s ease}
+.success-box .ico{font-size:2.5rem;margin-bottom:10px}
+.success-box h4{font-size:1.2rem;color:var(--green);margin-bottom:10px}
+.success-box p{color:#aaa;font-size:.92rem;line-height:1.55}
+.success-msg{background:rgba(0,0,0,.5);border:1px dashed var(--green);border-radius:10px;padding:14px;margin-top:14px;color:#ddd;font-family:'SF Mono',monospace;font-size:.82rem;text-align:left;word-break:break-all}
+
+.hidden{display:none}
+
+@media(max-width:560px){
+  .step-card{padding:24px 18px}
+  .progress-wrap .pstep .dot{width:26px;height:26px;font-size:.7rem}
+  .step-title{font-size:1.2rem}
+  .btn-primary{min-width:0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="brand"><span class="brand-mark"></span><span>The Agência</span></a>
+  <a href="crm.html" class="exit">← CRM</a>
+</header>
+
+<main>
+  <div class="hero-block">
+    <div class="eyebrow"><span class="dot"></span> Setup · Google Sheets</div>
+    <h1>Receba <span class="gold">cada lead</span> na sua planilha</h1>
+    <p class="hero-sub">5 passos. Aproximadamente 5 minutos. Não precisa saber programar — só clicar e colar.</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="pstep" data-step="1"><div class="dot">1</div><div class="bar"></div></div>
+    <div class="pstep" data-step="2"><div class="dot">2</div><div class="bar"></div></div>
+    <div class="pstep" data-step="3"><div class="dot">3</div><div class="bar"></div></div>
+    <div class="pstep" data-step="4"><div class="dot">4</div><div class="bar"></div></div>
+    <div class="pstep" data-step="5"><div class="dot">5</div></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-card" data-card="1">
+    <span class="step-num">Passo 1 de 5</span>
+    <h2 class="step-title">Criar a planilha no Google Sheets</h2>
+    <p class="step-desc">Vamos começar criando uma planilha nova na sua conta Google. Clica no botão abaixo — abre o Google Sheets já com uma planilha em branco pronta.</p>
+    <div class="instr">
+      💡 Você precisa estar logada na sua conta Google (<strong>fernandotonini444@gmail.com</strong>). Se aparecer tela de login, faz login e volta aqui.
+    </div>
+    <a href="https://sheets.new" target="_blank" class="btn btn-link" onclick="markStep(1)">📊 Abrir Google Sheets agora →</a>
+    <div class="instr" style="margin-top:18px">
+      Quando abrir a planilha, dá um nome pra ela. Exemplo: <code>Leads The Agência</code>.<br>
+      Depois volta aqui e clica em <strong>"Próximo passo"</strong>.
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="next(1)">Já criei · Próximo passo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card hidden" data-card="2">
+    <span class="step-num">Passo 2 de 5</span>
+    <h2 class="step-title">Colar os cabeçalhos</h2>
+    <p class="step-desc">Agora vamos colar a primeira linha (cabeçalho da planilha). Toca no botão <strong>COPIAR</strong> abaixo, vai pra planilha, clica na célula <strong>A1</strong> e cola (Ctrl+V ou Cmd+V).</p>
+    <button class="copy-btn" onclick="copyText('headers',this)">📋 Copiar</button>
+    <div class="copy-block" id="headers">Data	ID	Tier	Score	Nome	Empresa	WhatsApp	Email	Instagram	Estágio	Gargalo	Marketing	Budget	Urgência	Decisor	Prioridades	Contexto</div>
+    <div class="instr">
+      <strong>Atenção:</strong> ao colar, o Google Sheets vai distribuir os títulos em colunas A até Q automaticamente (é tudo separado por tabulação).
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prev(2)">← Voltar</button>
+      <button class="btn btn-primary" onclick="next(2)">Colei · Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card hidden" data-card="3">
+    <span class="step-num">Passo 3 de 5</span>
+    <h2 class="step-title">Adicionar o "robô" da planilha</h2>
+    <p class="step-desc">Agora vamos adicionar o código que recebe os leads e cria as linhas automaticamente. Não se assuste com o código — você só precisa copiar e colar.</p>
+    <div class="instr">
+      <ol>
+        <li>Na planilha, vai em <strong>Extensões → Apps Script</strong> (no menu superior)</li>
+        <li>Vai abrir uma nova aba com um editor de código</li>
+        <li>Apaga o que tiver lá (geralmente <code>function myFunction() {}</code>)</li>
+        <li>Cola o código abaixo no lugar</li>
+      </ol>
+    </div>
+    <button class="copy-btn" onclick="copyText('script',this)">📋 Copiar código</button>
+    <div class="copy-block" id="script">function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const data = JSON.parse(e.postData.contents);
+  const a = data.answers || {};
+  const getVal = (k) => {
+    const v = a[k];
+    if (!v) return '';
+    if (v.value) return v.value;
+    if (v.labels) return v.labels.join(' | ');
+    return v.label || '';
+  };
+  sheet.appendRow([
+    new Date(data.createdAt),
+    data.id,
+    (data.tier || '').toUpperCase(),
+    data.score,
+    data.contact?.name || '',
+    data.contact?.biz || '',
+    data.contact?.phone || '',
+    data.contact?.email || '',
+    data.contact?.ig || '',
+    getVal('stage'),
+    getVal('bottleneck_early') || getVal('bottleneck_grow') || getVal('bottleneck_scale') || getVal('why_now'),
+    getVal('mkt_history'),
+    getVal('budget'),
+    getVal('urgency'),
+    getVal('decision'),
+    getVal('priorities'),
+    getVal('context')
+  ]);
+  return ContentService.createTextOutput(JSON.stringify({ok: true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+    <div class="instr" style="margin-top:18px">
+      Depois de colar: clica no ícone de <strong>💾 disquete (Salvar)</strong> no topo do editor.<br>
+      Se pedir nome do projeto, pode chamar de <code>Webhook Leads</code>.
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prev(3)">← Voltar</button>
+      <button class="btn btn-primary" onclick="next(3)">Colei e salvei · Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card hidden" data-card="4">
+    <span class="step-num">Passo 4 de 5</span>
+    <h2 class="step-title">Publicar como Web App</h2>
+    <p class="step-desc">Última coisa que falta dentro do Apps Script: publicar pra gerar a URL que o quiz vai chamar.</p>
+    <div class="instr">
+      <strong>Ainda no editor do Apps Script:</strong>
+      <ol>
+        <li>Clica no botão azul <strong>"Implantar"</strong> (canto superior direito)</li>
+        <li>Escolhe <strong>"Nova implantação"</strong></li>
+        <li>Clica no ⚙️ (engrenagem) e escolhe <strong>"Aplicativo da Web"</strong></li>
+        <li>Em <strong>"Descrição"</strong>: pode deixar em branco ou escrever <code>Webhook leads</code></li>
+        <li>Em <strong>"Executar como"</strong>: deixa <strong>"Eu mesmo"</strong></li>
+        <li>Em <strong>"Quem tem acesso"</strong>: muda para <strong>"Qualquer pessoa"</strong> ⚠️ <em>(esse é o pulo do gato — sem isso não funciona)</em></li>
+        <li>Clica em <strong>"Implantar"</strong></li>
+        <li>Vai pedir autorização. Clica <strong>"Autorizar acesso"</strong></li>
+        <li>Escolhe sua conta. Se aparecer aviso "Não verificado": clica em <strong>"Avançado"</strong> → <strong>"Acessar (não verificado)"</strong> → <strong>"Permitir"</strong></li>
+        <li>Vai aparecer uma tela com <strong>"URL do aplicativo da Web"</strong>. <strong>É essa URL que vamos usar no próximo passo.</strong></li>
+      </ol>
+    </div>
+    <div class="instr" style="background:rgba(255,215,0,.08);border-left-color:#ffd700">
+      ⚠️ <strong>Importante:</strong> a URL começa com <code>https://script.google.com/macros/s/...</code> e termina com <code>/exec</code>. Copia ela INTEIRA.
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prev(4)">← Voltar</button>
+      <button class="btn btn-primary" onclick="next(4)">Copiei a URL · Próximo →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step-card hidden" data-card="5">
+    <span class="step-num">Passo 5 de 5</span>
+    <h2 class="step-title">Conectar com o quiz</h2>
+    <p class="step-desc">Cola aqui a URL que você copiou no passo anterior:</p>
+    <input type="url" id="webhook-url" class="input-field" placeholder="https://script.google.com/macros/s/.../exec">
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="prev(5)">← Voltar</button>
+      <button class="btn btn-primary" onclick="finish()">✓ Concluir setup</button>
+    </div>
+
+    <div class="success-box" id="success">
+      <div class="ico">🎉</div>
+      <h4>URL salva localmente!</h4>
+      <p>Pra fazer essa URL valer pra TODOS os clientes (não só esse dispositivo), me manda a mensagem abaixo pelo chat. Ela contém a URL exata que preciso pra colocar no código:</p>
+      <button class="copy-btn" onclick="copyText('final-msg',this)" style="margin:14px 0 0 auto;float:none;display:inline-block">📋 Copiar mensagem</button>
+      <div class="success-msg" id="final-msg">Claude, configura o Google Sheets webhook com essa URL:
+
+SHEETS_WEBHOOK: '<span id="url-out"></span>'</div>
+      <a href="index.html" class="btn btn-link" style="margin-top:18px">Voltar pro site</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+let currentStep = 1;
+markUI();
+
+function next(from){
+  document.querySelector(`[data-card="${from}"]`).classList.add('hidden');
+  currentStep = from + 1;
+  document.querySelector(`[data-card="${currentStep}"]`).classList.remove('hidden');
+  markUI();
+  window.scrollTo({top:0,behavior:'smooth'});
+  markStep(from);
+}
+
+function prev(from){
+  document.querySelector(`[data-card="${from}"]`).classList.add('hidden');
+  currentStep = from - 1;
+  document.querySelector(`[data-card="${currentStep}"]`).classList.remove('hidden');
+  markUI();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function markStep(n){
+  const el = document.querySelector(`.pstep[data-step="${n}"]`);
+  if(el) el.classList.add('done');
+}
+
+function markUI(){
+  document.querySelectorAll('.pstep').forEach(el=>{
+    const n = parseInt(el.dataset.step);
+    el.classList.toggle('active', n===currentStep);
+  });
+}
+
+function copyText(id, btn){
+  const t = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(t).then(()=>{
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(()=>{
+      btn.innerHTML = orig;
+      btn.classList.remove('copied');
+    }, 1800);
+  });
+}
+
+function finish(){
+  const url = document.getElementById('webhook-url').value.trim();
+  if(!url || !url.startsWith('https://script.google.com/')){
+    alert('Cola a URL do Apps Script (começa com https://script.google.com/...)');
+    return;
+  }
+  // salva no localStorage
+  try{
+    localStorage.setItem('theagencia_sheets_webhook', url);
+  }catch(e){}
+  document.getElementById('url-out').textContent = url;
+  document.getElementById('success').classList.add('show');
+  markStep(5);
+}
+
+// pré-carrega se já tiver salvo
+window.addEventListener('load',()=>{
+  const saved = localStorage.getItem('theagencia_sheets_webhook');
+  if(saved){
+    document.getElementById('webhook-url').value = saved;
+  }
+});
+</script>
+</body>
+</html>
